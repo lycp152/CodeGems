@@ -1,11 +1,31 @@
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 80vh;
+  justify-content: space-between;
+  font-family: "Jockey One", sans-serif;
+}
+
+.title {
+  font-size: 5rem;
+}
+
+.button-container {
+  margin-top: auto; /* 上部の余白を自動的に詰める */
+}
+
 .title-button {
   background-color: #fff;
   color: #333;
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 20px;
+  width: 300px;
 }
 
 .title-button:hover {

@@ -12,13 +12,15 @@ export default function Title() {
   return (
     <div className="title-container">
       <h1 className="title">CodeGems</h1>
-      {!isLoggedIn ? (
-        <button onClick={handleLogin} className="title-button">
-          Log in with GitHub
-        </button>
-      ) : (
-        <button className="title-button">Play</button>
-      )}
+      <div className="button-container">
+        {!isLoggedIn ? (
+          <button onClick={handleLogin} className="title-button">
+            Log in with GitHub
+          </button>
+        ) : (
+          <button className="title-button">Play</button>
+        )}
+      </div>
     </div>
   );
 }
