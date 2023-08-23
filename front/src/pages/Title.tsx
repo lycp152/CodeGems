@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../styles/Title.css";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 export default function Title() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // ログイン状態を管理するステート
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    // GitHubのログイン処理を実行した後にログイン状態を更新する
     setIsLoggedIn(true);
   };
 
@@ -15,7 +15,10 @@ export default function Title() {
       <div className="button-container">
         {!isLoggedIn ? (
           <button onClick={handleLogin} className="title-button">
-            Log in with GitHub
+            <div className="button-content">
+              <GitHubIcon style={{ fontSize: 35, marginRight: "10px" }} />
+              Log in with GitHub
+            </div>
           </button>
         ) : (
           <button className="title-button">Play</button>

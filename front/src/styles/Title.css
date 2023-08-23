@@ -1,3 +1,4 @@
+/* Title.css */
 .title-container {
   display: flex;
   flex-direction: column;
@@ -13,10 +14,13 @@
 }
 
 .button-container {
-  margin-top: auto; /* 上部の余白を自動的に詰める */
+  margin-top: auto;
 }
 
 .title-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #fff;
   color: #333;
   padding: 10px 20px;
@@ -26,8 +30,14 @@
   font-weight: bold;
   font-size: 20px;
   width: 300px;
+  height: 45px;
 }
 
 .title-button:hover {
   background-color: #ddd;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
 }
