@@ -1,14 +1,12 @@
-import React, { useState } from "react";
 import "../styles/Title.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import { useAuth } from "../context/AuthContext";
 
 export default function Title() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const handleLogin = () => {
     setIsLoggedIn(true);
   };
-
   return (
     <div className="title-container">
       <h1 className="title">CodeGems</h1>

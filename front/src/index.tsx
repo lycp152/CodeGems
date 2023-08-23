@@ -5,6 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { Astar } from "@thirdweb-dev/chains";
 import "./styles/globals.css";
+import { AuthProvider } from "./context/AuthContext";
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
@@ -16,7 +17,9 @@ const root = createRoot(container!);
 root.render(
   <React.StrictMode>
     <ThirdwebProvider activeChain={Astar}>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </ThirdwebProvider>
   </React.StrictMode>
 );
