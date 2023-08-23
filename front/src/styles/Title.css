@@ -1,0 +1,13 @@
+.title-button {
+  background-color: #fff;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.title-button:hover {
+  background-color: #ddd;
+}
