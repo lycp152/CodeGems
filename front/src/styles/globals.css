@@ -7,11 +7,6 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-a {
-  color: #84309c;
-  text-decoration: none;
-}
-
 * {
   box-sizing: border-box;
 }
