@@ -1,10 +1,10 @@
 import React from "react";
-// import "../styles/Ranking.css";
+// import "../styles/GemSkin.css";
 
-export default function Ranking() {
+export default function GemSkin() {
   return (
     <div className="title-container">
-      <h1 className="title">ranking</h1>
+      <h1 className="title">gemSkin</h1>
       <div className="main-container"></div>
     </div>
   );
