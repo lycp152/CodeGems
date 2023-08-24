@@ -1,11 +1,16 @@
 import "../styles/Title.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { useAuth } from "../context/AuthContext";
+import { usePlay } from "../context/PlayContext";
 
 export default function Title() {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const handleLogin = () => {
     setIsLoggedIn(true);
+  };
+  const { setIsPlaying } = usePlay();
+  const handlePlay = () => {
+    setIsPlaying(true);
   };
   return (
     <div className="title-container">
@@ -19,7 +24,9 @@ export default function Title() {
             </div>
           </button>
         ) : (
-          <button className="title-button">Play</button>
+          <button onClick={handlePlay} className="title-button">
+            Play
+          </button>
         )}
       </div>
     </div>

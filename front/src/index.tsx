@@ -6,6 +6,7 @@ import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { Astar } from "@thirdweb-dev/chains";
 import "./styles/globals.css";
 import { AuthProvider } from "./context/AuthContext";
+import { PlayProvider } from "./context/PlayContext";
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
@@ -18,7 +19,9 @@ root.render(
   <React.StrictMode>
     <ThirdwebProvider activeChain={Astar}>
       <AuthProvider>
-        <App />
+        <PlayProvider>
+          <App />
+        </PlayProvider>
       </AuthProvider>
     </ThirdwebProvider>
   </React.StrictMode>
