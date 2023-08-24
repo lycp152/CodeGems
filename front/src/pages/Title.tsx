@@ -3,7 +3,7 @@ import "../styles/Title.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { useAuth } from "../context/AuthContext";
 import { usePlay } from "../context/PlayContext";
-import ActionButton from "./ActionButton";
+import LongButton from "../components/LongButton";
 
 export default function Title() {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -20,13 +20,13 @@ export default function Title() {
       <h1 className="title">CodeGems</h1>
       <div className="button-container">
         {!isLoggedIn ? (
-          <ActionButton
+          <LongButton
             icon={<GitHubIcon style={{ fontSize: 35, marginRight: "10px" }} />}
             label="Log in with GitHub"
             onClick={handleLogin}
           />
         ) : (
-          <ActionButton label="Play" onClick={handlePlay} />
+          <LongButton label="Play" onClick={handlePlay} />
         )}
       </div>
     </div>
