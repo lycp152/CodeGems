@@ -4,6 +4,7 @@ import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import LogoutIcon from "@mui/icons-material/Logout";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"; // 追加：タイトルへ戻るボタンのアイコン
 import { useAuth } from "../context/AuthContext";
 import { usePlay } from "../context/PlayContext";
 import "../styles/SideMenuButton.css";
@@ -15,7 +16,7 @@ export default function SideMenuButton() {
   };
   const { isPlaying } = usePlay();
 
-  const isDetailView = false; // ここにメニューの詳細画面かどうかの条件を追加
+  const isDetailView = false; // メニューの詳細画面かどうか判定
 
   return (
     <div className="side-buttons">
@@ -42,6 +43,12 @@ export default function SideMenuButton() {
             label="howToPlay"
           />
         </>
+      )}
+      {isDetailView && (
+        <IconButton
+          icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
+          label="backToTitle"
+        />
       )}
     </div>
   );
