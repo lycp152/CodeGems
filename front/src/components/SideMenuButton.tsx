@@ -27,7 +27,7 @@ export default function SideMenuButton() {
         <button onClick={handleLogout} className="side-button">
           <div className="button-content">
             <LogoutIcon style={{ fontSize: 80 }} />
-            Logout
+            logOut
           </div>
         </button>
       ) : null}
