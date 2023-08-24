@@ -7,7 +7,7 @@
   flex-direction: column;
 }
 
-.side-button {
+.icon-button {
   border: none;
   border-radius: 8px;
   background-color: transparent;
@@ -32,6 +32,6 @@
   line-height: 0.8;
 }
 
-.side-button:hover {
+.icon-button:hover {
   color: #ddd;
 }
