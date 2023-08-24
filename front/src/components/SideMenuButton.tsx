@@ -15,28 +15,34 @@ export default function SideMenuButton() {
   };
   const { isPlaying } = usePlay();
 
+  const isDetailView = false; // ここにメニューの詳細画面かどうかの条件を追加
+
   return (
     <div className="side-buttons">
-      {isPlaying ? (
-        <IconButton
-          icon={<LightbulbIcon style={{ fontSize: 80 }} />}
-          label="hint"
-        />
-      ) : isLoggedIn ? (
-        <IconButton
-          onClick={handleLogout}
-          icon={<LogoutIcon style={{ fontSize: 80 }} />}
-          label="logOut"
-        />
-      ) : null}
-      <IconButton
-        icon={<VolumeUpIcon style={{ fontSize: 80 }} />}
-        label="sound"
-      />
-      <IconButton
-        icon={<QuestionMarkIcon style={{ fontSize: 80 }} />}
-        label="howToPlay"
-      />
+      {!isDetailView && (
+        <>
+          {isPlaying ? (
+            <IconButton
+              icon={<LightbulbIcon style={{ fontSize: 80 }} />}
+              label="hint"
+            />
+          ) : isLoggedIn ? (
+            <IconButton
+              onClick={handleLogout}
+              icon={<LogoutIcon style={{ fontSize: 80 }} />}
+              label="logOut"
+            />
+          ) : null}
+          <IconButton
+            icon={<VolumeUpIcon style={{ fontSize: 80 }} />}
+            label="sound"
+          />
+          <IconButton
+            icon={<QuestionMarkIcon style={{ fontSize: 80 }} />}
+            label="howToPlay"
+          />
+        </>
+      )}
     </div>
   );
 }
