@@ -20,9 +20,16 @@ export default function SideMenuButton() {
   const isDetailView = false;
 
   const [isSoundOn, setIsSoundOn] = useState(true);
+  const [hintCount, setHintCount] = useState(4); // 初期値は4
 
   const handleSoundToggle = () => {
     setIsSoundOn((prevState) => !prevState);
+  };
+
+  const handleHintButtonClick = () => {
+    if (hintCount > 0) {
+      setHintCount((prevCount) => prevCount - 1); // カウントを減少
+    }
   };
 
   return (
@@ -31,7 +38,14 @@ export default function SideMenuButton() {
         <>
           {isPlaying ? (
             <IconButton
-              icon={<LightbulbIcon style={{ fontSize: 80 }} />}
+              onClick={handleHintButtonClick}
+              icon={
+                <div>
+                  <LightbulbIcon style={{ fontSize: 80 }} />
+                  <div className="hint-count">{hintCount}</div>{" "}
+                  {/* カウントを表示 */}
+                </div>
+              }
               label="hint"
             />
           ) : isLoggedIn ? (

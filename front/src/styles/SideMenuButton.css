@@ -35,3 +35,14 @@
 .icon-button:hover {
   color: #ddd;
 }
+
+.hint-count {
+  color: #000;
+  font-size: 34px;
+  position: absolute;
+  top: 9%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Inter", sans-serif;
+  font-weight: bold;
+}
