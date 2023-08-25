@@ -1,7 +1,7 @@
 import React from "react";
 
 interface IconButtonProps {
-  icon: React.ReactNode;
+  icon: React.ReactElement;
   label: string;
   onClick?: () => void;
 }

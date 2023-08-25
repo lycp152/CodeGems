@@ -3,7 +3,9 @@ import "./styles/Home.css";
 import Title from "./pages/Title";
 import SideMenuButton from "./components/SideMenuButton";
 
-export default function Home() {
+interface HomeProps {}
+
+const Home: React.FC<HomeProps> = () => {
   return (
     <main className="main">
       <div className="main-contents">
@@ -15,4 +17,6 @@ export default function Home() {
       </footer>
     </main>
   );
-}
+};
+
+export default Home;

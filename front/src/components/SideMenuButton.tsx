@@ -1,26 +1,28 @@
 import React, { useState } from "react";
-import IconButton from "./IconButton";
-import LightbulbIcon from "@mui/icons-material/Lightbulb";
-import LogoutIcon from "@mui/icons-material/Logout";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
-import VolumeOffIcon from "@mui/icons-material/VolumeOff";
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import {
+  Lightbulb as LightbulbIcon,
+  Logout as LogoutIcon,
+  VolumeUp as VolumeUpIcon,
+  VolumeOff as VolumeOffIcon,
+  QuestionMark as QuestionMarkIcon,
+  ArrowBack as ArrowBackIcon,
+} from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
 import { usePlay } from "../context/PlayContext";
+import IconButton from "./IconButton";
 import "../styles/SideMenuButton.css";
 
-export default function SideMenuButton() {
+interface SideMenuButtonProps {}
+
+export default function SideMenuButton(props: SideMenuButtonProps) {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isPlaying } = usePlay();
+  const [isSoundOn, setIsSoundOn] = useState(true);
+  const [hintCount, setHintCount] = useState<number>(4); // hintCountの型を指定
+
   const handleLogout = () => {
     setIsLoggedIn(false);
   };
-  const { isPlaying } = usePlay();
-
-  const isDetailView = false;
-
-  const [isSoundOn, setIsSoundOn] = useState(true);
-  const [hintCount, setHintCount] = useState(4); // 初期値は4
 
   const handleSoundToggle = () => {
     setIsSoundOn((prevState) => !prevState);
@@ -28,9 +30,11 @@ export default function SideMenuButton() {
 
   const handleHintButtonClick = () => {
     if (hintCount > 0) {
-      setHintCount((prevCount) => prevCount - 1); // カウントを減少
+      setHintCount((prevCount) => prevCount - 1);
     }
   };
+
+  const isDetailView: boolean = false; // isDetailViewの型を指定
 
   return (
     <div className="side-buttons">
@@ -42,8 +46,7 @@ export default function SideMenuButton() {
               icon={
                 <div>
                   <LightbulbIcon style={{ fontSize: 80 }} />
-                  <div className="hint-count">{hintCount}</div>{" "}
-                  {/* カウントを表示 */}
+                  <div className="hint-count">{hintCount}</div>
                 </div>
               }
               label="hint"
@@ -63,7 +66,7 @@ export default function SideMenuButton() {
               ) : (
                 <VolumeOffIcon style={{ fontSize: 80 }} />
               )
-            } // 音声アイコンの切り替え
+            }
             label="sound"
           />
           <IconButton
