@@ -14,9 +14,13 @@ import "../styles/SideMenuButton.css";
 
 interface SideMenuButtonProps {
   toggleHowToPlay: () => void;
+  isDetailView: boolean; // isDetailViewをPropsとして受け取る
 }
 
-const SideMenuButton: React.FC<SideMenuButtonProps> = ({ toggleHowToPlay }) => {
+const SideMenuButton: React.FC<SideMenuButtonProps> = ({
+  toggleHowToPlay,
+  isDetailView,
+}) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const { isPlaying } = usePlay();
   const [isSoundOn, setIsSoundOn] = useState(true);
@@ -35,8 +39,6 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({ toggleHowToPlay }) => {
       setHintCount((prevCount) => prevCount - 1);
     }
   };
-
-  const isDetailView: boolean = false;
 
   return (
     <div className="side-buttons">
@@ -80,6 +82,7 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({ toggleHowToPlay }) => {
       )}
       {isDetailView && (
         <IconButton
+          onClick={toggleHowToPlay}
           icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
           label="backToTitle"
         />

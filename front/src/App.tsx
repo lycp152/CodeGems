@@ -8,13 +8,18 @@ interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
   const [isHowToPlayVisible, setIsHowToPlayVisible] = useState(false);
+  const [isDetailView, setDetailView] = useState(false);
 
   return (
     <main className="main">
       <div className="main-contents">
         {isHowToPlayVisible ? <HowToPlay /> : <Title />}
         <SideMenuButton
-          toggleHowToPlay={() => setIsHowToPlayVisible(!isHowToPlayVisible)}
+          toggleHowToPlay={() => {
+            setIsHowToPlayVisible(!isHowToPlayVisible);
+            setDetailView(!isDetailView);
+          }}
+          isDetailView={isDetailView} // isDetailViewをPropsとして渡す
         />
       </div>
       <footer>
