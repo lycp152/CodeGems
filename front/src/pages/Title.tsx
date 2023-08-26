@@ -2,22 +2,19 @@ import React from "react";
 import "../styles/Title.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { useAuth } from "../context/AuthContext";
-import { usePlay } from "../context/PlayContext";
 import LongButton from "../components/LongButton";
 import MainMenu from "../components/MainMenu";
 
 interface TitleProps {
-  toggleDetailView: () => void; // toggleDetailViewプロップを追加
+  toggleDetailView: () => void;
+  handlePlay: () => void; // handlePlay プロップを追加
 }
 
-export default function Title({ toggleDetailView }: TitleProps) {
+export default function Title({ toggleDetailView, handlePlay }: TitleProps) {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
+
   const handleLogin = () => {
     setIsLoggedIn(true);
-  };
-  const { setIsPlaying } = usePlay();
-  const handlePlay = () => {
-    setIsPlaying(true);
   };
 
   return (

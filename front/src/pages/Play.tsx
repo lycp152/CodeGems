@@ -4,7 +4,7 @@ import React from "react";
 export default function Play() {
   return (
     <div className="title-container">
-      <div className="main-container"></div>
+      <div className="main-container">プレイ画面</div>
     </div>
   );
 }

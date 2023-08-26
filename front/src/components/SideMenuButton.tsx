@@ -8,21 +8,21 @@ import {
   ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
-import { usePlay } from "../context/PlayContext";
 import IconButton from "./IconButton";
 import "../styles/SideMenuButton.css";
 
 interface SideMenuButtonProps {
   toggleDetailView: () => void;
   isDetailView: boolean; // isDetailViewをPropsとして受け取る
+  isPlaying: boolean;
 }
 
 const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   toggleDetailView,
   isDetailView,
+  isPlaying,
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
-  const { isPlaying } = usePlay();
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [hintCount, setHintCount] = useState<number>(4);
 
