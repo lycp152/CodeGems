@@ -20,10 +20,10 @@ const Home: React.FC<HomeProps> = () => {
   return (
     <main className="main">
       <div className="main-contents">
-        {isPlaying ? (
-          <Play />
-        ) : isHowToPlayVisible ? (
+        {isHowToPlayVisible ? (
           <HowToPlay />
+        ) : isPlaying ? (
+          <Play />
         ) : (
           <Title
             toggleDetailView={toggleDetailView}
