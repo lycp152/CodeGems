@@ -13,7 +13,7 @@ import "../styles/SideMenuButton.css";
 
 interface SideMenuButtonProps {
   toggleDetailView: () => void;
-  isDetailView: boolean; // isDetailViewをPropsとして受け取る
+  isDetailView: boolean;
   isPlaying: boolean;
 }
 

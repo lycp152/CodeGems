@@ -7,10 +7,10 @@ import MainMenu from "../components/MainMenu";
 
 interface TitleProps {
   toggleDetailView: () => void;
-  handlePlay: () => void; // handlePlay プロップを追加
+  handlePlay: () => void;
 }
 
-export default function Title({ toggleDetailView, handlePlay }: TitleProps) {
+const Title: React.FC<TitleProps> = ({ toggleDetailView, handlePlay }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
 
   const handleLogin = () => {
@@ -36,4 +36,6 @@ export default function Title({ toggleDetailView, handlePlay }: TitleProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Title;

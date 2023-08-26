@@ -14,14 +14,19 @@ interface PlayProviderProps {
 export const PlayProvider: React.FC<PlayProviderProps> = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const playContextValue: PlayContextProps = {
+    isPlaying,
+    setIsPlaying,
+  };
+
   return (
-    <PlayContext.Provider value={{ isPlaying, setIsPlaying }}>
+    <PlayContext.Provider value={playContextValue}>
       {children}
     </PlayContext.Provider>
   );
 };
 
-export const usePlay = () => {
+export const usePlay = (): PlayContextProps => {
   const context = useContext(PlayContext);
   if (!context) {
     throw new Error("usePlay must be used within a PlayProvider");

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./styles/Home.css";
 import Title from "./pages/Title";
 import HowToPlay from "./pages/HowToPlay";
-import Play from "./pages/Play"; // Playコンポーネントをインポート
+import Play from "./pages/Play";
 import SideMenuButton from "./components/SideMenuButton";
 
 interface HomeProps {}
@@ -27,7 +27,7 @@ const Home: React.FC<HomeProps> = () => {
         ) : (
           <Title
             toggleDetailView={toggleDetailView}
-            handlePlay={() => setIsPlaying(true)} // handlePlay を呼び出す
+            handlePlay={() => setIsPlaying(true)}
           />
         )}
         <SideMenuButton

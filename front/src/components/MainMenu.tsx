@@ -5,24 +5,31 @@ import DiamondIcon from "@mui/icons-material/Diamond";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 interface MainMenuProps {
-  toggleDetailView: () => void; // 新しく追加
+  toggleDetailView: () => void;
 }
 
 const MainMenu: React.FC<MainMenuProps> = ({ toggleDetailView }) => {
+  const handleMenuItemClick = (label: string) => {
+    if (label === "rewardNFT" || label === "gemSkin" || label === "ranking") {
+      toggleDetailView(); // toggleDetailView を呼び出す
+    }
+    // 他のメニューアイテムをクリックした場合の処理を追加できます
+  };
+
   return (
     <div className="main-menu">
       <IconButton
-        onClick={toggleDetailView} // rewardNFT アイコンが押されたときに toggleDetailView を呼び出す
+        onClick={() => handleMenuItemClick("rewardNFT")}
         icon={<MilitaryTechIcon style={{ fontSize: 80 }} />}
         label="rewardNFT"
       />
       <IconButton
-        onClick={toggleDetailView} // gemSkin アイコンが押されたときに toggleDetailView を呼び出す
+        onClick={() => handleMenuItemClick("gemSkin")}
         icon={<DiamondIcon style={{ fontSize: 80 }} />}
         label="gemSkin"
       />
       <IconButton
-        onClick={toggleDetailView} // ranking アイコンが押されたときに toggleDetailView を呼び出す
+        onClick={() => handleMenuItemClick("ranking")}
         icon={<EmojiEventsIcon style={{ fontSize: 80 }} />}
         label="ranking"
       />
