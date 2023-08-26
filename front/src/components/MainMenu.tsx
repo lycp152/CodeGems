@@ -5,15 +5,24 @@ import DiamondIcon from "@mui/icons-material/Diamond";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 interface MainMenuProps {
-  toggleDetailView: () => void;
+  toggleRewardNFT: () => void;
+  toggleGemSkin: () => void;
+  toggleRanking: () => void;
 }
 
-const MainMenu: React.FC<MainMenuProps> = ({ toggleDetailView }) => {
+const MainMenu: React.FC<MainMenuProps> = ({
+  toggleRewardNFT,
+  toggleGemSkin,
+  toggleRanking,
+}) => {
   const handleMenuItemClick = (label: string) => {
-    if (label === "rewardNFT" || label === "gemSkin" || label === "ranking") {
-      toggleDetailView(); // toggleDetailView を呼び出す
+    if (label === "rewardNFT") {
+      toggleRewardNFT();
+    } else if (label === "gemSkin") {
+      toggleGemSkin();
+    } else if (label === "ranking") {
+      toggleRanking();
     }
-    // 他のメニューアイテムをクリックした場合の処理を追加できます
   };
 
   return (

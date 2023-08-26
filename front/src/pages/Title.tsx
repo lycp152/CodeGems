@@ -6,11 +6,19 @@ import LongButton from "../components/LongButton";
 import MainMenu from "../components/MainMenu";
 
 interface TitleProps {
-  toggleDetailView: () => void;
+  toggleHowToPlay: () => void;
+  toggleRewardNFT: () => void;
+  toggleGemSkin: () => void;
+  toggleRanking: () => void;
   handlePlay: () => void;
 }
 
-const Title: React.FC<TitleProps> = ({ toggleDetailView, handlePlay }) => {
+const Title: React.FC<TitleProps> = ({
+  toggleRewardNFT,
+  toggleGemSkin,
+  toggleRanking,
+  handlePlay,
+}) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
 
   const handleLogin = () => {
@@ -29,7 +37,11 @@ const Title: React.FC<TitleProps> = ({ toggleDetailView, handlePlay }) => {
           />
         ) : (
           <>
-            <MainMenu toggleDetailView={toggleDetailView} />
+            <MainMenu
+              toggleRewardNFT={toggleRewardNFT}
+              toggleGemSkin={toggleGemSkin}
+              toggleRanking={toggleRanking}
+            />
             <LongButton label="Play" onClick={handlePlay} />
           </>
         )}
