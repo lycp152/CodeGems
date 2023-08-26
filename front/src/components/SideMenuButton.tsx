@@ -12,13 +12,15 @@ import { usePlay } from "../context/PlayContext";
 import IconButton from "./IconButton";
 import "../styles/SideMenuButton.css";
 
-interface SideMenuButtonProps {}
+interface SideMenuButtonProps {
+  toggleHowToPlay: () => void;
+}
 
-export default function SideMenuButton(props: SideMenuButtonProps) {
+const SideMenuButton: React.FC<SideMenuButtonProps> = ({ toggleHowToPlay }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const { isPlaying } = usePlay();
   const [isSoundOn, setIsSoundOn] = useState(true);
-  const [hintCount, setHintCount] = useState<number>(4); // hintCountの型を指定
+  const [hintCount, setHintCount] = useState<number>(4);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -34,7 +36,7 @@ export default function SideMenuButton(props: SideMenuButtonProps) {
     }
   };
 
-  const isDetailView: boolean = false; // isDetailViewの型を指定
+  const isDetailView: boolean = false;
 
   return (
     <div className="side-buttons">
@@ -70,6 +72,7 @@ export default function SideMenuButton(props: SideMenuButtonProps) {
             label="sound"
           />
           <IconButton
+            onClick={toggleHowToPlay}
             icon={<QuestionMarkIcon style={{ fontSize: 80 }} />}
             label="howToPlay"
           />
@@ -83,4 +86,6 @@ export default function SideMenuButton(props: SideMenuButtonProps) {
       )}
     </div>
   );
-}
+};
+
+export default SideMenuButton;
