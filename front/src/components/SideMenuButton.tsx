@@ -28,19 +28,10 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [hintCount, setHintCount] = useState<number>(4);
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
-
-  const handleSoundToggle = () => {
-    setIsSoundOn((prevState) => !prevState);
-  };
-
-  const handleHintButtonClick = () => {
-    if (hintCount > 0) {
-      setHintCount((prevCount) => prevCount - 1);
-    }
-  };
+  const handleLogout = () => setIsLoggedIn(false);
+  const handleSoundToggle = () => setIsSoundOn(!isSoundOn);
+  const handleHintButtonClick = () =>
+    hintCount > 0 && setHintCount((prevCount) => prevCount - 1);
 
   return (
     <div className="side-buttons">
@@ -57,13 +48,15 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
               }
               label="hint"
             />
-          ) : isLoggedIn ? (
-            <IconButton
-              onClick={handleLogout}
-              icon={<LogoutIcon style={{ fontSize: 80 }} />}
-              label="logOut"
-            />
-          ) : null}
+          ) : (
+            isLoggedIn && (
+              <IconButton
+                onClick={handleLogout}
+                icon={<LogoutIcon style={{ fontSize: 80 }} />}
+                label="logOut"
+              />
+            )
+          )}
           <IconButton
             onClick={handleSoundToggle}
             icon={

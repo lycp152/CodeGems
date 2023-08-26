@@ -1,8 +1,10 @@
 import React from "react";
 import IconButton from "../components/IconButton";
-import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
-import DiamondIcon from "@mui/icons-material/Diamond";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import {
+  MilitaryTech as MilitaryTechIcon,
+  Diamond,
+  EmojiEvents,
+} from "@mui/icons-material";
 
 interface MainMenuProps {
   toggleRewardNFT: () => void;
@@ -16,32 +18,27 @@ const MainMenu: React.FC<MainMenuProps> = ({
   toggleRanking,
 }) => {
   const handleMenuItemClick = (label: string) => {
-    if (label === "rewardNFT") {
-      toggleRewardNFT();
-    } else if (label === "gemSkin") {
-      toggleGemSkin();
-    } else if (label === "ranking") {
-      toggleRanking();
-    }
+    if (label === "rewardNFT") toggleRewardNFT();
+    else if (label === "gemSkin") toggleGemSkin();
+    else if (label === "ranking") toggleRanking();
   };
+
+  const menuItems = [
+    { label: "rewardNFT", icon: <MilitaryTechIcon style={{ fontSize: 80 }} /> },
+    { label: "gemSkin", icon: <Diamond style={{ fontSize: 80 }} /> },
+    { label: "ranking", icon: <EmojiEvents style={{ fontSize: 80 }} /> },
+  ];
 
   return (
     <div className="main-menu">
-      <IconButton
-        onClick={() => handleMenuItemClick("rewardNFT")}
-        icon={<MilitaryTechIcon style={{ fontSize: 80 }} />}
-        label="rewardNFT"
-      />
-      <IconButton
-        onClick={() => handleMenuItemClick("gemSkin")}
-        icon={<DiamondIcon style={{ fontSize: 80 }} />}
-        label="gemSkin"
-      />
-      <IconButton
-        onClick={() => handleMenuItemClick("ranking")}
-        icon={<EmojiEventsIcon style={{ fontSize: 80 }} />}
-        label="ranking"
-      />
+      {menuItems.map((item) => (
+        <IconButton
+          key={item.label}
+          onClick={() => handleMenuItemClick(item.label)}
+          icon={item.icon}
+          label={item.label}
+        />
+      ))}
     </div>
   );
 };

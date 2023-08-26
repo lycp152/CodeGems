@@ -8,70 +8,56 @@ import Ranking from "./pages/Ranking";
 import Play from "./pages/Play";
 import SideMenuButton from "./components/SideMenuButton";
 
+enum DetailView {
+  None,
+  HowToPlay,
+  RewardNFT,
+  GemSkin,
+  Ranking,
+}
+
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isHowToPlay, setIsHowToPlay] = useState(false);
-  const [isRewardNFT, setIsRewardNFT] = useState(false);
-  const [isGemSkin, setIsGemSkin] = useState(false);
-  const [isRanking, setIsRanking] = useState(false);
-  const [isDetailView, setDetailView] = useState(false);
+  const [detailView, setDetailView] = useState(DetailView.None);
 
-  const toggleHowToPlay = () => {
-    setIsHowToPlay(true);
-    setDetailView(true);
+  const handleDetailViewToggle = (view: DetailView) => {
+    setIsPlaying(false);
+    setDetailView(view);
   };
 
-  const toggleBackToTitle = () => {
-    setIsHowToPlay(false);
-    setIsRewardNFT(false);
-    setIsGemSkin(false);
-    setIsRanking(false);
-    setDetailView(false);
-  };
-
-  const toggleRewardNFT = () => {
-    setIsRewardNFT(true);
-    setDetailView(true);
-  };
-
-  const toggleGemSkin = () => {
-    setIsGemSkin(true);
-    setDetailView(true);
-  };
-
-  const toggleRanking = () => {
-    setIsRanking(true);
-    setDetailView(true);
+  const handlePlay = () => {
+    setIsPlaying(true);
+    setDetailView(DetailView.None);
   };
 
   return (
     <main className="main">
       <div className="main-contents">
-        {isHowToPlay ? (
+        {detailView === DetailView.HowToPlay ? (
           <HowToPlay />
-        ) : isRewardNFT ? (
+        ) : detailView === DetailView.RewardNFT ? (
           <RewardNFT />
-        ) : isGemSkin ? (
+        ) : detailView === DetailView.GemSkin ? (
           <GemSkin />
-        ) : isRanking ? (
+        ) : detailView === DetailView.Ranking ? (
           <Ranking />
         ) : isPlaying ? (
           <Play />
         ) : (
           <Title
-            toggleHowToPlay={toggleHowToPlay}
-            toggleRewardNFT={toggleRewardNFT}
-            toggleGemSkin={toggleGemSkin}
-            toggleRanking={toggleRanking}
-            handlePlay={() => setIsPlaying(true)}
+            toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
+            toggleRewardNFT={() => handleDetailViewToggle(DetailView.RewardNFT)}
+            toggleGemSkin={() => handleDetailViewToggle(DetailView.GemSkin)}
+            toggleRanking={() => handleDetailViewToggle(DetailView.Ranking)}
+            handlePlay={handlePlay}
           />
         )}
         <SideMenuButton
-          toggleHowToPlay={toggleHowToPlay}
-          toggleBackToTitle={toggleBackToTitle}
-          isDetailView={isDetailView}
+          toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
+          toggleBackToTitle={() => setDetailView(DetailView.None)}
+          isDetailView={detailView !== DetailView.None}
           isPlaying={isPlaying}
         />
       </div>
