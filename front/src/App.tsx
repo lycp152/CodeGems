@@ -19,23 +19,31 @@ const Home: React.FC<HomeProps> = () => {
   const [isDetailView, setDetailView] = useState(false);
 
   const toggleHowToPlay = () => {
-    setIsHowToPlay(!isHowToPlay);
-    setDetailView(!isDetailView);
+    setIsHowToPlay(true);
+    setDetailView(true);
+  };
+
+  const toggleBackToTitle = () => {
+    setIsHowToPlay(false);
+    setIsRewardNFT(false);
+    setIsGemSkin(false);
+    setIsRanking(false);
+    setDetailView(false);
   };
 
   const toggleRewardNFT = () => {
-    setIsRewardNFT(!isRewardNFT);
-    setDetailView(!isDetailView);
+    setIsRewardNFT(true);
+    setDetailView(true);
   };
 
   const toggleGemSkin = () => {
-    setIsGemSkin(!isGemSkin);
-    setDetailView(!isDetailView);
+    setIsGemSkin(true);
+    setDetailView(true);
   };
 
   const toggleRanking = () => {
-    setIsRanking(!isRanking);
-    setDetailView(!isDetailView);
+    setIsRanking(true);
+    setDetailView(true);
   };
 
   return (
@@ -62,6 +70,7 @@ const Home: React.FC<HomeProps> = () => {
         )}
         <SideMenuButton
           toggleHowToPlay={toggleHowToPlay}
+          toggleBackToTitle={toggleBackToTitle}
           isDetailView={isDetailView}
           isPlaying={isPlaying}
         />
