@@ -4,10 +4,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import { useAuth } from "../context/AuthContext";
 import { usePlay } from "../context/PlayContext";
 import LongButton from "../components/LongButton";
-import IconButton from "../components/IconButton";
-import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
-import DiamondIcon from "@mui/icons-material/Diamond";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import MainMenu from "../components/MainMenu";
 
 export default function Title() {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -31,20 +28,7 @@ export default function Title() {
           />
         ) : (
           <>
-            <div className="main-menu">
-              <IconButton
-                icon={<MilitaryTechIcon style={{ fontSize: 80 }} />}
-                label="rewardNFT"
-              />
-              <IconButton
-                icon={<DiamondIcon style={{ fontSize: 80 }} />}
-                label="gemSkin"
-              />
-              <IconButton
-                icon={<EmojiEventsIcon style={{ fontSize: 80 }} />}
-                label="ranking"
-              />
-            </div>
+            <MainMenu />
             <LongButton label="Play" onClick={handlePlay} />
           </>
         )}
