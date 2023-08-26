@@ -6,7 +6,11 @@ import { usePlay } from "../context/PlayContext";
 import LongButton from "../components/LongButton";
 import MainMenu from "../components/MainMenu";
 
-export default function Title() {
+interface TitleProps {
+  toggleDetailView: () => void; // toggleDetailViewプロップを追加
+}
+
+export default function Title({ toggleDetailView }: TitleProps) {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -28,7 +32,7 @@ export default function Title() {
           />
         ) : (
           <>
-            <MainMenu />
+            <MainMenu toggleDetailView={toggleDetailView} />
             <LongButton label="Play" onClick={handlePlay} />
           </>
         )}

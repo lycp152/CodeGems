@@ -18,7 +18,12 @@ const Home: React.FC<HomeProps> = () => {
   return (
     <main className="main">
       <div className="main-contents">
-        {isHowToPlayVisible ? <HowToPlay /> : <Title />}
+        {isHowToPlayVisible ? (
+          <HowToPlay />
+        ) : (
+          <Title toggleDetailView={toggleDetailView} />
+        )}{" "}
+        {/* toggleDetailViewを渡す */}
         <SideMenuButton
           toggleDetailView={toggleDetailView}
           isDetailView={isDetailView}
