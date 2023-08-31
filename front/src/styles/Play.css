@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   padding: 5px;
-  width: 448px; /* 固定の値（ジェム幅 60px * ジェム数 7 + 間隔 2px * (ジェム数 - 1)） */
+  width: 470px;
 }
 
 .score-time-container {
@@ -16,7 +16,6 @@
 .score,
 .remaining-time {
   font-size: 35px; /* フォントサイズを大きくする */
-  margin-right: 10px; /* スコアと残り時間の間隔を調整 */
 }
 
 .info {
@@ -25,7 +24,7 @@
 }
 
 .time-bar {
-  width: 448px; /* 固定の値（ジェム幅 60px * ジェム数 7 + 間隔 2px * (ジェム数 - 1)） */
+  width: 470px;
   height: 25px;
   background-color: #ddd;
   position: relative;
@@ -53,17 +52,18 @@
     ${numCols},
     50px
   ); /* グリッドの列数とセルの幅を調整 */
-  gap: 4px; /* グリッドセル間の間隔 */
+  gap: 14px; /* グリッドセル間の間隔 */
 }
 
 .grid-row {
   display: flex;
   justify-content: center;
+  gap: 14px;
 }
 
 .gem {
-  width: 58px; /* ジェムの幅を少し小さくする */
-  height: 58px; /* ジェムの高さを少し小さくする */
+  width: 50px; /* ジェムの幅を少し小さくする */
+  height: 50px; /* ジェムの高さを少し小さくする */
   border-radius: 50%;
   margin: 2px;
   display: flex; /* 追加：ジェム内の要素を中央に配置するために flex を使用 */
