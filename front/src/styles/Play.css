@@ -1,0 +1,89 @@
+.game-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  width: 448px; /* 固定の値（ジェム幅 60px * ジェム数 7 + 間隔 2px * (ジェム数 - 1)） */
+}
+
+.score-time-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.score,
+.remaining-time {
+  font-size: 35px; /* フォントサイズを大きくする */
+  margin-right: 10px; /* スコアと残り時間の間隔を調整 */
+}
+
+.info {
+  display: flex;
+  align-items: center;
+}
+
+.time-bar {
+  width: 448px; /* 固定の値（ジェム幅 60px * ジェム数 7 + 間隔 2px * (ジェム数 - 1)） */
+  height: 25px;
+  background-color: #ddd;
+  position: relative;
+  border-radius: 5px; /* 角を四角くする */
+  margin-bottom: 5px;
+}
+
+.time-remaining {
+  height: 100%;
+  background-color: #34ce42;
+  border-radius: 5px 0 0 5px; /* 角を四角くする */
+  width: 100%;
+}
+
+.play-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(
+    ${numCols},
+    50px
+  ); /* グリッドの列数とセルの幅を調整 */
+  gap: 4px; /* グリッドセル間の間隔 */
+}
+
+.grid-row {
+  display: flex;
+  justify-content: center;
+}
+
+.gem {
+  width: 60px; /* ジェムの幅 */
+  height: 60px; /* ジェムの高さ */
+  border-radius: 50%; /* 円形にすることでジェムに見えるように */
+  margin: 2px; /* ジェム間の間隔 */
+}
+
+/* ジェムの種類ごとに色を設定 */
+.gem-0 {
+  background-color: red;
+}
+.gem-1 {
+  background-color: blue;
+}
+.gem-2 {
+  background-color: green;
+}
+.gem-3 {
+  background-color: yellow;
+}
+.gem-4 {
+  background-color: orange;
+}
+.gem-5 {
+  background-color: purple;
+}
