@@ -25,27 +25,33 @@ const Title: React.FC<TitleProps> = ({
     setIsLoggedIn(true);
   };
 
+  const renderButtonSection = () => {
+    if (!isLoggedIn) {
+      return (
+        <LongButton
+          icon={<GitHubIcon style={{ fontSize: 35, marginRight: "10px" }} />}
+          label="Log in with GitHub"
+          onClick={handleLogin}
+        />
+      );
+    } else {
+      return (
+        <>
+          <MainMenu
+            toggleRewardNFT={toggleRewardNFT}
+            toggleGemSkin={toggleGemSkin}
+            toggleRanking={toggleRanking}
+          />
+          <LongButton label="Play" onClick={handlePlay} />
+        </>
+      );
+    }
+  };
+
   return (
     <div className="title-container">
       <h1 className="title">CodeGems</h1>
-      <div className="button-container">
-        {!isLoggedIn ? (
-          <LongButton
-            icon={<GitHubIcon style={{ fontSize: 35, marginRight: "10px" }} />}
-            label="Log in with GitHub"
-            onClick={handleLogin}
-          />
-        ) : (
-          <>
-            <MainMenu
-              toggleRewardNFT={toggleRewardNFT}
-              toggleGemSkin={toggleGemSkin}
-              toggleRanking={toggleRanking}
-            />
-            <LongButton label="Play" onClick={handlePlay} />
-          </>
-        )}
-      </div>
+      <div className="button-container">{renderButtonSection()}</div>
     </div>
   );
 };
