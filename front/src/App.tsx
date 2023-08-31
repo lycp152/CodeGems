@@ -6,6 +6,7 @@ import RewardNFT from "./pages/RewardNFT";
 import GemSkin from "./pages/GemSkin";
 import Ranking from "./pages/Ranking";
 import Play from "./pages/Play";
+import Result from "./pages/Result"; // Import the Result component
 import SideMenuButton from "./components/SideMenuButton";
 
 enum DetailView {
@@ -21,6 +22,8 @@ interface HomeProps {}
 const Home: React.FC<HomeProps> = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [detailView, setDetailView] = useState(DetailView.None);
+  const [remainingTime, setRemainingTime] = useState<number>(120);
+  const [score, setScore] = useState<number>(0);
 
   const handleDetailViewToggle = (view: DetailView) => {
     setIsPlaying(false);
@@ -44,7 +47,16 @@ const Home: React.FC<HomeProps> = () => {
         ) : detailView === DetailView.Ranking ? (
           <Ranking />
         ) : isPlaying ? (
-          <Play />
+          remainingTime <= 0 ? (
+            <Result score={score} />
+          ) : (
+            <Play
+              remainingTime={remainingTime}
+              setRemainingTime={setRemainingTime}
+              score={score}
+              setScore={setScore}
+            />
+          )
         ) : (
           <Title
             toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}

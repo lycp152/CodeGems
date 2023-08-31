@@ -28,13 +28,17 @@ function generateRandomBackgroundColor(): string {
   return backgroundColors[randomIndex];
 }
 
-export default function Play(): JSX.Element {
+interface PlayProps {
+  remainingTime: number;
+  setRemainingTime: React.Dispatch<React.SetStateAction<number>>;
+  score: number;
+  setScore: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Play: React.FC<PlayProps> = (props) => {
   const [grid, setGrid] = useState<Gem[][]>([]);
-  const [remainingTime, setRemainingTime] = useState<number>(120);
-  const [score, setScore] = useState<number>(0);
 
   useEffect(() => {
-    // Initialize the grid
     const newGrid: Gem[][] = [];
     for (let row = 0; row < numRows; row++) {
       const newRow: Gem[] = [];
@@ -47,12 +51,12 @@ export default function Play(): JSX.Element {
     }
     setGrid(newGrid);
 
-    // Set up the timer
     const timer = setInterval(() => {
-      setRemainingTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      props.setRemainingTime((prevTime) =>
+        prevTime > 0 ? prevTime - 1 : prevTime
+      );
     }, 1000);
 
-    // Clean up the timer when the component unmounts
     return () => {
       clearInterval(timer);
     };
@@ -73,9 +77,8 @@ export default function Play(): JSX.Element {
     );
     if (backgroundColor) {
       const multiplier = gemBackgroundColors[backgroundColor];
-      setScore((prevScore) => prevScore + multiplier);
+      props.setScore((prevScore) => prevScore + multiplier);
 
-      // Create a new grid array to update the clicked gem
       const updatedGrid = grid.map((gridRow, rowIndex) =>
         rowIndex === row
           ? gridRow.map((gem, colIndex) =>
@@ -91,15 +94,15 @@ export default function Play(): JSX.Element {
     <div className="play-container">
       <div className="game-info">
         <div className="score-time-container">
-          <div className="score">Score: {score}</div>
+          <div className="score">Score: {props.score}</div>
           <div className="remaining-time">
-            Time: {formatTime(remainingTime)}
+            Time: {formatTime(props.remainingTime)}
           </div>
         </div>
         <div className="time-bar">
           <div
             className="time-remaining"
-            style={{ width: `${(remainingTime / 120) * 100}%` }}
+            style={{ width: `${(props.remainingTime / 120) * 100}%` }}
           />
         </div>
       </div>
@@ -123,4 +126,6 @@ export default function Play(): JSX.Element {
       </div>
     </div>
   );
-}
+};
+
+export default Play;
