@@ -5,11 +5,12 @@ const numRows = 8;
 const numCols = 7;
 const numGemTypes = 6;
 
-interface GemBackgroundColors {
-  [color: string]: number;
+interface Gem {
+  gemValue: number;
+  backgroundColor: string;
 }
 
-const gemBackgroundColors: GemBackgroundColors = {
+const gemBackgroundColors: Record<string, number> = {
   "#12151A": 1,
   "#0E351F": 2,
   "#0D5C25": 3,
@@ -17,29 +18,28 @@ const gemBackgroundColors: GemBackgroundColors = {
   "#34CE42": 5,
 };
 
-function generateRandomGem() {
+function generateRandomGemValue(): number {
   return Math.floor(Math.random() * numGemTypes);
 }
 
-function generateRandomBackgroundColor() {
+function generateRandomBackgroundColor(): string {
   const backgroundColors = Object.keys(gemBackgroundColors);
   const randomIndex = Math.floor(Math.random() * backgroundColors.length);
   return backgroundColors[randomIndex];
 }
 
-export default function Play() {
-  const [grid, setGrid] = useState<
-    { gemValue: number; backgroundColor: string }[][]
-  >([]);
-  const [remainingTime, setRemainingTime] = useState<number>(120); // 2分のタイムリミット
+export default function Play(): JSX.Element {
+  const [grid, setGrid] = useState<Gem[][]>([]);
+  const [remainingTime, setRemainingTime] = useState<number>(120);
   const [score, setScore] = useState<number>(0);
 
   useEffect(() => {
-    const newGrid: { gemValue: number; backgroundColor: string }[][] = [];
+    // Initialize the grid
+    const newGrid: Gem[][] = [];
     for (let row = 0; row < numRows; row++) {
-      const newRow: { gemValue: number; backgroundColor: string }[] = [];
+      const newRow: Gem[] = [];
       for (let col = 0; col < numCols; col++) {
-        const gemValue = generateRandomGem();
+        const gemValue = generateRandomGemValue();
         const backgroundColor = generateRandomBackgroundColor();
         newRow.push({ gemValue, backgroundColor });
       }
@@ -47,16 +47,18 @@ export default function Play() {
     }
     setGrid(newGrid);
 
+    // Set up the timer
     const timer = setInterval(() => {
-      setRemainingTime((prevTime) => prevTime - 1);
+      setRemainingTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
+    // Clean up the timer when the component unmounts
     return () => {
       clearInterval(timer);
     };
   }, []);
 
-  function formatTime(seconds: number) {
+  function formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
@@ -64,7 +66,7 @@ export default function Play() {
       .padStart(2, "0")}`;
   }
 
-  function handleGemClick(row: number, col: number) {
+  function handleGemClick(row: number, col: number): void {
     const gem = grid[row][col];
     const backgroundColor = Object.keys(gemBackgroundColors).find(
       (color) => gemBackgroundColors[color] === gem.gemValue
@@ -72,8 +74,16 @@ export default function Play() {
     if (backgroundColor) {
       const multiplier = gemBackgroundColors[backgroundColor];
       setScore((prevScore) => prevScore + multiplier);
-      gem.gemValue = -1; // ジェムをクリックした場所の値を-1に変更
-      setGrid([...grid]);
+
+      // Create a new grid array to update the clicked gem
+      const updatedGrid = grid.map((gridRow, rowIndex) =>
+        rowIndex === row
+          ? gridRow.map((gem, colIndex) =>
+              colIndex === col ? { ...gem, gemValue: -1 } : gem
+            )
+          : gridRow
+      );
+      setGrid(updatedGrid);
     }
   }
 
@@ -96,26 +106,18 @@ export default function Play() {
       <div className="grid-container">
         {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="grid-row">
-            {row.map(
-              (
-                gem: { gemValue: number; backgroundColor: string },
-                colIndex: number
-              ) => (
+            {row.map((gem, colIndex) => (
+              <div
+                key={colIndex}
+                className={`gem gem-${gem.gemValue}`}
+                onClick={() => handleGemClick(rowIndex, colIndex)}
+              >
                 <div
-                  key={colIndex}
-                  className={`gem gem-${gem.gemValue}`}
-                  onClick={() => handleGemClick(rowIndex, colIndex)}
-                >
-                  <div
-                    className="gem-background"
-                    style={{
-                      backgroundColor: gem.backgroundColor,
-                      zIndex: -1,
-                    }}
-                  />
-                </div>
-              )
-            )}
+                  className="gem-background"
+                  style={{ backgroundColor: gem.backgroundColor, zIndex: -1 }}
+                />
+              </div>
+            ))}
           </div>
         ))}
       </div>
