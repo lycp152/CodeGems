@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Play.css";
 
-const numRows = 8;
-const numCols = 7;
-const numGemTypes = 6;
+const numRows = 8; // グリッドの行数
+const numCols = 7; // グリッドの列数
+const numGemTypes = 6; // ジェムの種類数
 
 interface Gem {
   gemValue: number;
@@ -45,13 +45,14 @@ const Play: React.FC<PlayProps> = ({
   score,
   setScore,
 }) => {
-  const [grid, setGrid] = useState<Gem[][]>([]);
+  const [grid, setGrid] = useState<Gem[][]>([]); // グリッドの状態
   const [selectedGem, setSelectedGem] = useState<{
     row: number;
     col: number;
-  } | null>(null);
+  } | null>(null); // 選択されたジェムの位置
 
   useEffect(() => {
+    // グリッドを初期化
     const newGrid: Gem[][] = [];
     for (let row = 0; row < numRows; row++) {
       const newRow: Gem[] = [];
@@ -74,10 +75,12 @@ const Play: React.FC<PlayProps> = ({
     }
     setGrid(newGrid);
 
+    // タイマーを設定
     const timer = setInterval(() => {
       setRemainingTime((prevTime) => (prevTime > 0 ? prevTime - 1 : prevTime));
     }, 1000);
 
+    // コンポーネントのアンマウント時にタイマーをクリア
     return () => {
       clearInterval(timer);
     };
@@ -95,13 +98,13 @@ const Play: React.FC<PlayProps> = ({
     if (selectedGem === null) {
       setSelectedGem({ row, col });
     } else {
-      // Check if clicked gem is adjacent to the selected gem
+      // クリックされたジェムが選択されたジェムに隣接しているかを確認
       const isAdjacent =
         (Math.abs(selectedGem.row - row) === 1 && selectedGem.col === col) ||
         (Math.abs(selectedGem.col - col) === 1 && selectedGem.row === row);
 
       if (isAdjacent) {
-        // Swap the gems
+        // ジェムを交換
         const updatedGrid = grid.map((gridRow, rowIndex) =>
           gridRow.map((gem, colIndex) => {
             if (
@@ -110,12 +113,13 @@ const Play: React.FC<PlayProps> = ({
             ) {
               return {
                 ...grid[selectedGem.row][selectedGem.col],
-                backgroundColor: grid[row][col].backgroundColor,
+                ...grid[row][col],
               };
             }
             return gem;
           })
         );
+
         setGrid(updatedGrid);
         setSelectedGem(null);
       } else {
@@ -128,9 +132,9 @@ const Play: React.FC<PlayProps> = ({
     <div className="play-container">
       <div className="game-info">
         <div className="score-time-container">
-          <div className="score">Score: {score}</div>
+          <div className="score">スコア: {score}</div>
           <div className="remaining-time">
-            Time: {formatTime(remainingTime)}
+            時間: {formatTime(remainingTime)}
           </div>
         </div>
         <div className="time-bar">
