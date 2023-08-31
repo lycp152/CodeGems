@@ -18,8 +18,12 @@ const gemBackgroundColors: Record<string, number> = {
   "#34CE42": 5,
 };
 
-function generateRandomGemValue(): number {
-  return Math.floor(Math.random() * numGemTypes);
+function generateRandomGemValue(excludedValues: number[]): number {
+  let newValue;
+  do {
+    newValue = Math.floor(Math.random() * numGemTypes);
+  } while (excludedValues.includes(newValue));
+  return newValue;
 }
 
 function generateRandomBackgroundColor(): string {
@@ -48,8 +52,18 @@ const Play: React.FC<PlayProps> = ({
     for (let row = 0; row < numRows; row++) {
       const newRow: Gem[] = [];
       for (let col = 0; col < numCols; col++) {
-        const gemValue = generateRandomGemValue();
+        const excludedValues: number[] = [];
+        if (row >= 2) {
+          const previousGems = [newGrid[row - 1][col], newGrid[row - 2][col]];
+          excludedValues.push(...previousGems.map((gem) => gem.gemValue));
+        }
+        if (col >= 2) {
+          const previousGems = [newRow[col - 1], newRow[col - 2]];
+          excludedValues.push(...previousGems.map((gem) => gem.gemValue));
+        }
+        const gemValue = generateRandomGemValue(excludedValues);
         const backgroundColor = generateRandomBackgroundColor();
+
         newRow.push({ gemValue, backgroundColor });
       }
       newGrid.push(newRow);
