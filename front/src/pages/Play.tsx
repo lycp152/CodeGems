@@ -46,6 +46,10 @@ const Play: React.FC<PlayProps> = ({
   setScore,
 }) => {
   const [grid, setGrid] = useState<Gem[][]>([]);
+  const [selectedGem, setSelectedGem] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
 
   useEffect(() => {
     const newGrid: Gem[][] = [];
@@ -88,22 +92,35 @@ const Play: React.FC<PlayProps> = ({
   }
 
   function handleGemClick(row: number, col: number): void {
-    const gem = grid[row][col];
-    const backgroundColor = Object.keys(gemBackgroundColors).find(
-      (color) => gemBackgroundColors[color] === gem.gemValue
-    );
-    if (backgroundColor) {
-      const multiplier = gemBackgroundColors[backgroundColor];
-      setScore((prevScore) => prevScore + multiplier);
+    if (selectedGem === null) {
+      setSelectedGem({ row, col });
+    } else {
+      // Check if clicked gem is adjacent to the selected gem
+      const isAdjacent =
+        (Math.abs(selectedGem.row - row) === 1 && selectedGem.col === col) ||
+        (Math.abs(selectedGem.col - col) === 1 && selectedGem.row === row);
 
-      const updatedGrid = grid.map((gridRow, rowIndex) =>
-        rowIndex === row
-          ? gridRow.map((gem, colIndex) =>
-              colIndex === col ? { ...gem, gemValue: -1 } : gem
-            )
-          : gridRow
-      );
-      setGrid(updatedGrid);
+      if (isAdjacent) {
+        // Swap the gems
+        const updatedGrid = grid.map((gridRow, rowIndex) =>
+          gridRow.map((gem, colIndex) => {
+            if (
+              (rowIndex === selectedGem.row && colIndex === selectedGem.col) ||
+              (rowIndex === row && colIndex === col)
+            ) {
+              return {
+                ...grid[selectedGem.row][selectedGem.col],
+                backgroundColor: grid[row][col].backgroundColor,
+              };
+            }
+            return gem;
+          })
+        );
+        setGrid(updatedGrid);
+        setSelectedGem(null);
+      } else {
+        setSelectedGem({ row, col });
+      }
     }
   }
 
@@ -131,11 +148,16 @@ const Play: React.FC<PlayProps> = ({
                 key={colIndex}
                 className={`gem gem-${gem.gemValue}`}
                 onClick={() => handleGemClick(rowIndex, colIndex)}
+                style={{ position: "relative" }}
               >
                 <div
                   className="gem-background"
                   style={{ backgroundColor: gem.backgroundColor, zIndex: -1 }}
                 />
+                {selectedGem?.row === rowIndex &&
+                  selectedGem?.col === colIndex && (
+                    <div className="gem-cursor" />
+                  )}
               </div>
             ))}
           </div>

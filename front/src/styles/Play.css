@@ -15,7 +15,7 @@
 
 .score,
 .remaining-time {
-  font-size: 35px; /* フォントサイズを大きくする */
+  font-size: 35px;
 }
 
 .info {
@@ -75,7 +75,7 @@
   position: absolute;
   width: 60px;
   height: 60px;
-  border-radius: 8px;
+  border-radius: 10px;
   pointer-events: none;
 }
 
@@ -97,4 +97,15 @@
 }
 .gem-5 {
   background-color: purple;
+}
+
+.gem-cursor {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 5px solid white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  pointer-events: none; /* カーソルをクリック可能エリア外に配置するためにクリックイベントを無効にする */
+  z-index: 1; /* カーソルをジェムの上に表示するためにz-indexを設定 */
 }
