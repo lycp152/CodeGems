@@ -62,10 +62,21 @@
 }
 
 .gem {
-  width: 60px; /* ジェムの幅 */
-  height: 60px; /* ジェムの高さ */
-  border-radius: 50%; /* 円形にすることでジェムに見えるように */
-  margin: 2px; /* ジェム間の間隔 */
+  width: 58px; /* ジェムの幅を少し小さくする */
+  height: 58px; /* ジェムの高さを少し小さくする */
+  border-radius: 50%;
+  margin: 2px;
+  display: flex; /* 追加：ジェム内の要素を中央に配置するために flex を使用 */
+  align-items: center; /* 追加：縦方向に中央に配置 */
+  justify-content: center; /* 追加：横方向に中央に配置 */
+}
+
+.gem-background {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  pointer-events: none;
 }
 
 /* ジェムの種類ごとに色を設定 */
