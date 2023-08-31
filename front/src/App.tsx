@@ -6,7 +6,7 @@ import RewardNFT from "./pages/RewardNFT";
 import GemSkin from "./pages/GemSkin";
 import Ranking from "./pages/Ranking";
 import Play from "./pages/Play";
-import Result from "./pages/Result"; // Import the Result component
+import Result from "./pages/Result";
 import SideMenuButton from "./components/SideMenuButton";
 
 enum DetailView {
@@ -15,6 +15,7 @@ enum DetailView {
   RewardNFT,
   GemSkin,
   Ranking,
+  Result,
 }
 
 interface HomeProps {}
@@ -35,37 +36,58 @@ const Home: React.FC<HomeProps> = () => {
     setDetailView(DetailView.None);
   };
 
-  return (
-    <main className="main">
-      <div className="main-contents">
-        {detailView === DetailView.HowToPlay ? (
-          <HowToPlay />
-        ) : detailView === DetailView.RewardNFT ? (
-          <RewardNFT />
-        ) : detailView === DetailView.GemSkin ? (
-          <GemSkin />
-        ) : detailView === DetailView.Ranking ? (
-          <Ranking />
-        ) : isPlaying ? (
-          remainingTime <= 0 ? (
-            <Result score={score} />
-          ) : (
+  const renderDetailView = () => {
+    switch (detailView) {
+      case DetailView.HowToPlay:
+        return <HowToPlay />;
+      case DetailView.RewardNFT:
+        return <RewardNFT />;
+      case DetailView.GemSkin:
+        return <GemSkin />;
+      case DetailView.Ranking:
+        return <Ranking />;
+      case DetailView.Result:
+        return (
+          <Result
+            score={score}
+            handleBack={() => handleDetailViewToggle(DetailView.None)}
+          />
+        );
+      default:
+        if (isPlaying) {
+          if (remainingTime <= 0) {
+            handleDetailViewToggle(DetailView.Result);
+          }
+          return (
             <Play
               remainingTime={remainingTime}
               setRemainingTime={setRemainingTime}
               score={score}
               setScore={setScore}
             />
-          )
-        ) : (
-          <Title
-            toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
-            toggleRewardNFT={() => handleDetailViewToggle(DetailView.RewardNFT)}
-            toggleGemSkin={() => handleDetailViewToggle(DetailView.GemSkin)}
-            toggleRanking={() => handleDetailViewToggle(DetailView.Ranking)}
-            handlePlay={handlePlay}
-          />
-        )}
+          );
+        } else {
+          return (
+            <Title
+              toggleHowToPlay={() =>
+                handleDetailViewToggle(DetailView.HowToPlay)
+              }
+              toggleRewardNFT={() =>
+                handleDetailViewToggle(DetailView.RewardNFT)
+              }
+              toggleGemSkin={() => handleDetailViewToggle(DetailView.GemSkin)}
+              toggleRanking={() => handleDetailViewToggle(DetailView.Ranking)}
+              handlePlay={handlePlay}
+            />
+          );
+        }
+    }
+  };
+
+  return (
+    <main className="main">
+      <div className="main-contents">
+        {renderDetailView()}
         <SideMenuButton
           toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
           toggleBackToTitle={() => setDetailView(DetailView.None)}

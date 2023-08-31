@@ -35,7 +35,12 @@ interface PlayProps {
   setScore: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Play: React.FC<PlayProps> = (props) => {
+const Play: React.FC<PlayProps> = ({
+  remainingTime,
+  setRemainingTime,
+  score,
+  setScore,
+}) => {
   const [grid, setGrid] = useState<Gem[][]>([]);
 
   useEffect(() => {
@@ -52,15 +57,13 @@ const Play: React.FC<PlayProps> = (props) => {
     setGrid(newGrid);
 
     const timer = setInterval(() => {
-      props.setRemainingTime((prevTime) =>
-        prevTime > 0 ? prevTime - 1 : prevTime
-      );
+      setRemainingTime((prevTime) => (prevTime > 0 ? prevTime - 1 : prevTime));
     }, 1000);
 
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [setRemainingTime]);
 
   function formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
@@ -77,7 +80,7 @@ const Play: React.FC<PlayProps> = (props) => {
     );
     if (backgroundColor) {
       const multiplier = gemBackgroundColors[backgroundColor];
-      props.setScore((prevScore) => prevScore + multiplier);
+      setScore((prevScore) => prevScore + multiplier);
 
       const updatedGrid = grid.map((gridRow, rowIndex) =>
         rowIndex === row
@@ -94,15 +97,15 @@ const Play: React.FC<PlayProps> = (props) => {
     <div className="play-container">
       <div className="game-info">
         <div className="score-time-container">
-          <div className="score">Score: {props.score}</div>
+          <div className="score">Score: {score}</div>
           <div className="remaining-time">
-            Time: {formatTime(props.remainingTime)}
+            Time: {formatTime(remainingTime)}
           </div>
         </div>
         <div className="time-bar">
           <div
             className="time-remaining"
-            style={{ width: `${(props.remainingTime / 120) * 100}%` }}
+            style={{ width: `${(remainingTime / 120) * 100}%` }}
           />
         </div>
       </div>
