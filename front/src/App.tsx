@@ -34,6 +34,8 @@ const Home: React.FC<HomeProps> = () => {
   const handlePlay = () => {
     setIsPlaying(true);
     setDetailView(DetailView.None);
+    setScore(0); // Reset the score when starting a new play
+    setRemainingTime(120); // Reset the remaining time when starting a new play
   };
 
   const renderDetailView = () => {
