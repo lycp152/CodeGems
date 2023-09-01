@@ -11,6 +11,7 @@ const numGemTypes = 6; // ジェムの種類数
 interface Gem {
   gemValue: number;
   backgroundColor: string;
+  className?: string; // classNameプロパティを追加
 }
 
 // ジェムの背景色とジェムの値のマッピング
@@ -138,6 +139,11 @@ const Play: React.FC<PlayProps> = ({
           })
         );
 
+        // アニメーションをトリガーするために gem-fall クラスを追加
+        updatedGrid[selectedGem.row][selectedGem.col].className =
+          "gem gem-fall";
+        updatedGrid[row][col].className = "gem gem-fall";
+
         // グリッドを更新した後、連続するジェムを消す処理を追加
         const updatedGridWithMatches = removeMatches(updatedGrid);
 
@@ -156,9 +162,14 @@ const Play: React.FC<PlayProps> = ({
           0
         );
 
-        setGrid(updatedGridWithMatches); // グリッドを更新
-        setScore(newScore); // 得点を更新
-        setSelectedGem(null); // 選択されたジェムをリセット
+        // アニメーションが完了したら gem-fall クラスを削除
+        setTimeout(() => {
+          updatedGrid[selectedGem.row][selectedGem.col].className = "gem";
+          updatedGrid[row][col].className = "gem";
+          setGrid(updatedGridWithMatches); // グリッドを更新
+          setScore(newScore); // 得点を更新
+          setSelectedGem(null); // 選択されたジェムをリセット
+        });
       } else {
         setSelectedGem({ row, col });
       }

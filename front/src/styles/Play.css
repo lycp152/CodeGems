@@ -1,3 +1,4 @@
+/* Game Info セクション */
 .game-info {
   display: flex;
   flex-direction: column;
@@ -23,22 +24,24 @@
   align-items: center;
 }
 
+/* タイムバー */
 .time-bar {
   width: 470px;
   height: 25px;
   background-color: #ddd;
   position: relative;
-  border-radius: 5px; /* 角を四角くする */
+  border-radius: 5px;
   margin-bottom: 5px;
 }
 
 .time-remaining {
   height: 100%;
   background-color: #34ce42;
-  border-radius: 5px 0 0 5px; /* 角を四角くする */
+  border-radius: 5px 0 0 5px;
   width: 100%;
 }
 
+/* プレイコンテナ */
 .play-container {
   display: flex;
   flex-direction: column;
@@ -46,13 +49,11 @@
   justify-content: center;
 }
 
+/* グリッドコンテナ */
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(
-    ${numCols},
-    50px
-  ); /* グリッドの列数とセルの幅を調整 */
-  gap: 14px; /* グリッドセル間の間隔 */
+  grid-template-columns: repeat(${numCols}, 50px);
+  gap: 14px;
 }
 
 .grid-row {
@@ -61,16 +62,19 @@
   gap: 14px;
 }
 
+/* ジェム */
 .gem {
-  width: 50px; /* ジェムの幅を少し小さくする */
-  height: 50px; /* ジェムの高さを少し小さくする */
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin: 2px;
-  display: flex; /* 追加：ジェム内の要素を中央に配置するために flex を使用 */
-  align-items: center; /* 追加：縦方向に中央に配置 */
-  justify-content: center; /* 追加：横方向に中央に配置 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out; /* アニメーションのプロパティを設定 */
 }
 
+/* ジェムの背景 */
 .gem-background {
   position: absolute;
   width: 60px;
@@ -79,7 +83,7 @@
   pointer-events: none;
 }
 
-/* ジェムの種類ごとに色を設定 */
+/* ジェムの種類ごとの色 */
 .gem-0 {
   background-color: red;
 }
@@ -99,6 +103,7 @@
   background-color: purple;
 }
 
+/* ジェムカーソル */
 .gem-cursor {
   position: absolute;
   width: 60px;
@@ -106,6 +111,21 @@
   border: 5px solid white;
   border-radius: 10px;
   box-sizing: border-box;
-  pointer-events: none; /* カーソルをクリック可能エリア外に配置するためにクリックイベントを無効にする */
-  z-index: 1; /* カーソルをジェムの上に表示するためにz-indexを設定 */
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Gemの移動アニメーション */
+@keyframes gem-move {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%); /* 垂直に移動 */
+  }
+}
+
+/* ジェムにアニメーションを適用 */
+.gem-move {
+  animation: gem-move 0.3s ease-in-out; /* アニメーションのプロパティを設定 */
 }
