@@ -114,17 +114,22 @@ const Play: React.FC<PlayProps> = ({
         (Math.abs(selectedGem.col - col) === 1 && selectedGem.row === row);
 
       if (isAdjacent) {
-        // ジェムを交換してグリッドを更新
+        // 選択されたジェムとクリックされたジェムの値（gemValue）と位置を入れ替えてグリッドを更新
         const updatedGrid = grid.map((gridRow, rowIndex) =>
           gridRow.map((gem, colIndex) => {
-            if (
-              (rowIndex === selectedGem.row && colIndex === selectedGem.col) ||
-              (rowIndex === row && colIndex === col)
-            ) {
-              // 選択されたジェムとクリックされたジェムのプロパティをマージ
+            if (rowIndex === selectedGem.row && colIndex === selectedGem.col) {
+              // クリックされたジェムの値（gemValue）と位置を選択されたジェムに設定
+              return {
+                ...grid[row][col],
+                row: selectedGem.row,
+                col: selectedGem.col,
+              };
+            } else if (rowIndex === row && colIndex === col) {
+              // 選択されたジェムの値（gemValue）と位置をクリックされたジェムに設定
               return {
                 ...grid[selectedGem.row][selectedGem.col],
-                backgroundColor: grid[row][col].backgroundColor,
+                row,
+                col,
               };
             }
             return gem;
