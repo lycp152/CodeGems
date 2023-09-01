@@ -8,14 +8,12 @@ import {
   numGemTypes,
   gemBackgroundColors,
   MIN_MATCH_COUNT,
-  CSS_CLASSES,
 } from "../components/constants";
 
 // ジェムの型を定義
 interface Gem {
   gemValue: number;
   backgroundColor: string;
-  className?: string;
 }
 
 // 新しいランダムなジェムの値を生成する関数
@@ -34,11 +32,12 @@ function generateRandomBackgroundColor(): string {
   return backgroundColors[randomIndex];
 }
 
+// プレイコンポーネントのプロパティ
 interface PlayProps {
-  remainingTime: number;
-  setRemainingTime: React.Dispatch<React.SetStateAction<number>>;
-  score: number;
-  setScore: React.Dispatch<React.SetStateAction<number>>;
+  remainingTime: number; // 残り時間
+  setRemainingTime: React.Dispatch<React.SetStateAction<number>>; // 残り時間を設定する関数
+  score: number; // 得点
+  setScore: React.Dispatch<React.SetStateAction<number>>; // 得点を設定する関数
 }
 
 // ゲームコンポーネント
@@ -186,20 +185,19 @@ const Play: React.FC<PlayProps> = ({
       0
     );
 
-    // アニメーションが完了したら gem-fall クラスを削除
-    setTimeout(() => {
-      setGrid(newGrid); // グリッドを更新
-      setScore(newScore); // 得点を更新
+    // グリッドを更新
+    setGrid(newGrid);
+    // 得点を更新
+    setScore(newScore);
 
-      // 連続しているか再度判定
-      const hasMatches = checkForMatches(newGrid);
-      if (hasMatches) {
-        // 連続している場合、再帰的に removeMatchesAndCascade を呼び出す
-        removeMatchesAndCascade(newGrid);
-      } else {
-        setSelectedGem(null); // 選択されたジェムをリセット
-      }
-    });
+    // 連続しているか再度判定
+    const hasMatches = checkForMatches(newGrid);
+    if (hasMatches) {
+      // 連続している場合、再帰的に removeMatchesAndCascade を呼び出す
+      removeMatchesAndCascade(newGrid);
+    } else {
+      setSelectedGem(null); // 選択されたジェムをリセット
+    }
   }
 
   // ジェムの連続判定を行う関数
@@ -262,11 +260,6 @@ const Play: React.FC<PlayProps> = ({
             return gem;
           })
         );
-
-        // アニメーションをトリガーするために gem-fall クラスを追加
-        updatedGrid[selectedGem.row][selectedGem.col].className =
-          CSS_CLASSES.GEM_FALL;
-        updatedGrid[row][col].className = CSS_CLASSES.GEM_FALL;
 
         // グリッドを更新した後、連続するジェムを消す処理を追加
         removeMatchesAndCascade(updatedGrid);
