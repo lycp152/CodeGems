@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Play.css";
+import GemGrid from "../components/GemGrid";
 
 // グリッドの行数、列数、ジェムの種類数を定義
 const numRows = 8; // グリッドの行数
@@ -242,29 +243,11 @@ const Play: React.FC<PlayProps> = ({
           />
         </div>
       </div>
-      <div className="grid-container">
-        {grid.map((row, rowIndex) => (
-          <div key={rowIndex} className="grid-row">
-            {row.map((gem, colIndex) => (
-              <div
-                key={colIndex}
-                className={`gem gem-${gem.gemValue}`}
-                onClick={() => handleGemClick(rowIndex, colIndex)}
-                style={{ position: "relative" }}
-              >
-                <div
-                  className="gem-background"
-                  style={{ backgroundColor: gem.backgroundColor, zIndex: -1 }}
-                />
-                {selectedGem?.row === rowIndex &&
-                  selectedGem?.col === colIndex && (
-                    <div className="gem-cursor" />
-                  )}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+      <GemGrid
+        grid={grid}
+        selectedGem={selectedGem}
+        onGemClick={(row, col) => handleGemClick(row, col)}
+      />
     </div>
   );
 };
