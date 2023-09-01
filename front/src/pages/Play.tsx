@@ -59,27 +59,33 @@ const Play: React.FC<PlayProps> = ({
   // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
   useEffect(() => {
     // グリッドを初期化
-    const newGrid: Gem[][] = [];
-    for (let row = 0; row < numRows; row++) {
-      const newRow: Gem[] = [];
-      for (let col = 0; col < numCols; col++) {
-        // 隣接するジェムの値を除外してランダムなジェムを生成
-        const excludedValues: number[] = [];
-        if (row >= 2) {
-          const previousGems = [newGrid[row - 1][col], newGrid[row - 2][col]];
-          excludedValues.push(...previousGems.map((gem) => gem.gemValue));
+    function initializeGrid(): Gem[][] {
+      const newGrid: Gem[][] = [];
+      for (let row = 0; row < numRows; row++) {
+        const newRow: Gem[] = [];
+        for (let col = 0; col < numCols; col++) {
+          // 隣接するジェムの値を除外してランダムなジェムを生成
+          const excludedValues: number[] = [];
+          if (row >= 2) {
+            excludedValues.push(
+              ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
+            );
+          }
+          if (col >= 2) {
+            excludedValues.push(
+              ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
+            );
+          }
+          const gemValue = generateRandomGemValue(excludedValues);
+          const backgroundColor = generateRandomBackgroundColor();
+          newRow.push({ gemValue, backgroundColor });
         }
-        if (col >= 2) {
-          const previousGems = [newRow[col - 1], newRow[col - 2]];
-          excludedValues.push(...previousGems.map((gem) => gem.gemValue));
-        }
-        const gemValue = generateRandomGemValue(excludedValues);
-        const backgroundColor = generateRandomBackgroundColor();
-
-        newRow.push({ gemValue, backgroundColor });
+        newGrid.push(newRow);
       }
-      newGrid.push(newRow);
+      return newGrid;
     }
+
+    const newGrid = initializeGrid();
     // グリッドを更新
     setGrid(newGrid);
 
@@ -94,7 +100,7 @@ const Play: React.FC<PlayProps> = ({
     };
   }, [setRemainingTime]); // setRemainingTimeが変更されるとEffectが実行される
 
-  // 残り時間を分:秒のフォーマットに変換する関数
+  // setRemainingTimeが変更されるとEffectが実行される
   function formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -110,8 +116,7 @@ const Play: React.FC<PlayProps> = ({
     } else {
       // クリックされたジェムが選択されたジェムに隣接しているかを確認
       const isAdjacent =
-        (Math.abs(selectedGem.row - row) === 1 && selectedGem.col === col) ||
-        (Math.abs(selectedGem.col - col) === 1 && selectedGem.row === row);
+        Math.abs(selectedGem.row - row) + Math.abs(selectedGem.col - col) === 1;
 
       if (isAdjacent) {
         const selectedGemValue =
@@ -123,16 +128,10 @@ const Play: React.FC<PlayProps> = ({
           gridRow.map((gem, colIndex) => {
             if (rowIndex === selectedGem.row && colIndex === selectedGem.col) {
               // クリックされたジェムの値（gemValue）と位置を選択されたジェムに設定
-              return {
-                ...gem,
-                gemValue: clickedGemValue,
-              };
+              return { ...gem, gemValue: clickedGemValue };
             } else if (rowIndex === row && colIndex === col) {
               // 選択されたジェムの値（gemValue）と位置をクリックされたジェムに設定
-              return {
-                ...gem,
-                gemValue: selectedGemValue,
-              };
+              return { ...gem, gemValue: selectedGemValue };
             }
             return gem;
           })
@@ -142,33 +141,19 @@ const Play: React.FC<PlayProps> = ({
         const updatedGridWithMatches = removeMatches(updatedGrid);
 
         // 得点を計算して加算
-        let newScore = score;
-        updatedGridWithMatches.forEach((row) => {
-          row.forEach((gem) => {
-            if (gem.gemValue === -1) {
-              // ジェムが消えた場合、背景色に応じて得点を加算
-              switch (gem.backgroundColor) {
-                case "#12151A":
-                  newScore += 10;
-                  break;
-                case "#0E351F":
-                  newScore += 20;
-                  break;
-                case "#0D5C25":
-                  newScore += 30;
-                  break;
-                case "#249932":
-                  newScore += 40;
-                  break;
-                case "#34CE42":
-                  newScore += 50;
-                  break;
-                default:
-                  break;
-              }
-            }
-          });
-        });
+        const newScore = updatedGridWithMatches.reduce(
+          (acc, row) =>
+            acc +
+            row.reduce(
+              (rowAcc, gem) =>
+                // ジェムが消えた場合、背景色に応じて得点を加算
+                gem.gemValue === -1
+                  ? rowAcc + getScoreByBackgroundColor(gem.backgroundColor)
+                  : rowAcc,
+              0
+            ),
+          0
+        );
 
         setGrid(updatedGridWithMatches); // グリッドを更新
         setScore(newScore); // 得点を更新
@@ -224,13 +209,30 @@ const Play: React.FC<PlayProps> = ({
     return newGrid;
   }
 
+  function getScoreByBackgroundColor(backgroundColor: string): number {
+    switch (backgroundColor) {
+      case "#12151A":
+        return 10;
+      case "#0E351F":
+        return 20;
+      case "#0D5C25":
+        return 30;
+      case "#249932":
+        return 40;
+      case "#34CE42":
+        return 50;
+      default:
+        return 0;
+    }
+  }
+
   return (
     <div className="play-container">
       <div className="game-info">
         <div className="score-time-container">
-          <div className="score">スコア: {score}</div>
+          <div className="score">score: {score}</div>
           <div className="remaining-time">
-            時間: {formatTime(remainingTime)}
+            time: {formatTime(remainingTime)}
           </div>
         </div>
         <div className="time-bar">
