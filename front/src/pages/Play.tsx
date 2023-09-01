@@ -51,35 +51,34 @@ const Play: React.FC<PlayProps> = ({
     col: number;
   } | null>(null); // 選択されたジェムの位置
 
-  // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
-  useEffect(() => {
-    // グリッドを初期化
-    function initializeGrid(): Gem[][] {
-      const newGrid: Gem[][] = [];
-      for (let row = 0; row < numRows; row++) {
-        const newRow: Gem[] = [];
-        for (let col = 0; col < numCols; col++) {
-          // 隣接するジェムの値を除外してランダムなジェムを生成
-          const excludedValues: number[] = [];
-          if (row >= 2) {
-            excludedValues.push(
-              ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
-            );
-          }
-          if (col >= 2) {
-            excludedValues.push(
-              ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
-            );
-          }
-          const gemValue = generateRandomGemValue(excludedValues);
-          const backgroundColor = generateRandomBackgroundColor();
-          newRow.push({ gemValue, backgroundColor });
+  // グリッドの初期化
+  function initializeGrid(): Gem[][] {
+    const newGrid: Gem[][] = [];
+    for (let row = 0; row < numRows; row++) {
+      const newRow: Gem[] = [];
+      for (let col = 0; col < numCols; col++) {
+        // 隣接するジェムの値を除外してランダムなジェムを生成
+        const excludedValues: number[] = [];
+        if (row >= 2) {
+          excludedValues.push(
+            ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
+          );
         }
-        newGrid.push(newRow);
+        if (col >= 2) {
+          excludedValues.push(
+            ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
+          );
+        }
+        const gemValue = generateRandomGemValue(excludedValues);
+        const backgroundColor = generateRandomBackgroundColor();
+        newRow.push({ gemValue, backgroundColor });
       }
-      return newGrid;
+      newGrid.push(newRow);
     }
+    return newGrid;
+  }
 
+  useEffect(() => {
     const newGrid = initializeGrid();
     // グリッドを更新
     setGrid(newGrid);
