@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../styles/Play.css";
 
 // グリッドの行数、列数、ジェムの種類数を定義
-const numRows = 8;
-const numCols = 7;
-const numGemTypes = 6;
+const numRows = 8; // グリッドの行数
+const numCols = 7; // グリッドの列数
+const numGemTypes = 6; // ジェムの種類数
 
 // ジェムの型を定義
 interface Gem {
@@ -41,6 +41,7 @@ interface PlayProps {
   score: number;
   setScore: React.Dispatch<React.SetStateAction<number>>;
 }
+
 // ゲームコンポーネント
 const Play: React.FC<PlayProps> = ({
   remainingTime,
@@ -49,11 +50,11 @@ const Play: React.FC<PlayProps> = ({
   setScore,
 }) => {
   // グリッドと選択されたジェムの状態を管理するState
-  const [grid, setGrid] = useState<Gem[][]>([]);
+  const [grid, setGrid] = useState<Gem[][]>([]); // グリッドの状態
   const [selectedGem, setSelectedGem] = useState<{
     row: number;
     col: number;
-  } | null>(null);
+  } | null>(null); // 選択されたジェムの位置
 
   // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
   useEffect(() => {
@@ -121,16 +122,14 @@ const Play: React.FC<PlayProps> = ({
               (rowIndex === row && colIndex === col)
             ) {
               // 選択されたジェムとクリックされたジェムのプロパティをマージ
-              return Object.assign(
-                {},
-                grid[selectedGem.row][selectedGem.col],
-                grid[row][col]
-              );
+              return {
+                ...grid[selectedGem.row][selectedGem.col],
+                backgroundColor: grid[row][col].backgroundColor,
+              };
             }
             return gem;
           })
         );
-
         setGrid(updatedGrid); // グリッドを更新
         setSelectedGem(null); // 選択されたジェムをリセット
       } else {
