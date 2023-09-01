@@ -114,18 +114,3 @@
   pointer-events: none;
   z-index: 1;
 }
-
-/* Gemの移動アニメーション */
-@keyframes gem-move {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(100%); /* 垂直に移動 */
-  }
-}
-
-/* ジェムにアニメーションを適用 */
-.gem-move {
-  animation: gem-move 0.3s ease-in-out; /* アニメーションのプロパティを設定 */
-}
