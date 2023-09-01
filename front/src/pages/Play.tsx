@@ -108,39 +108,86 @@ const Play: React.FC<PlayProps> = ({
     if (selectedGem === null) {
       setSelectedGem({ row, col });
     } else {
-      // クリックされたジェムが選択されたジェムに隣接しているかを確認
       const isAdjacent =
         (Math.abs(selectedGem.row - row) === 1 && selectedGem.col === col) ||
         (Math.abs(selectedGem.col - col) === 1 && selectedGem.row === row);
 
       if (isAdjacent) {
-        // 選択されたジェムとクリックされたジェムの値（gemValue）と位置を入れ替えてグリッドを更新
+        const selectedGemValue =
+          grid[selectedGem.row][selectedGem.col].gemValue;
+        const clickedGemValue = grid[row][col].gemValue;
+
         const updatedGrid = grid.map((gridRow, rowIndex) =>
           gridRow.map((gem, colIndex) => {
             if (rowIndex === selectedGem.row && colIndex === selectedGem.col) {
-              // クリックされたジェムの値（gemValue）と位置を選択されたジェムに設定
               return {
-                ...grid[row][col],
-                row: selectedGem.row,
-                col: selectedGem.col,
+                ...gem,
+                gemValue: clickedGemValue,
               };
             } else if (rowIndex === row && colIndex === col) {
-              // 選択されたジェムの値（gemValue）と位置をクリックされたジェムに設定
               return {
-                ...grid[selectedGem.row][selectedGem.col],
-                row,
-                col,
+                ...gem,
+                gemValue: selectedGemValue,
               };
             }
             return gem;
           })
         );
-        setGrid(updatedGrid); // グリッドを更新
+
+        // グリッドを更新した後、連続するジェムを消す処理を追加
+        const updatedGridWithMatches = removeMatches(updatedGrid);
+
+        setGrid(updatedGridWithMatches); // グリッドを更新
         setSelectedGem(null); // 選択されたジェムをリセット
       } else {
         setSelectedGem({ row, col });
       }
     }
+  }
+
+  // 連続するジェムを消す関数
+  function removeMatches(currentGrid: Gem[][]): Gem[][] {
+    const newGrid = currentGrid.map((row) => [...row]);
+
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols; col++) {
+        const gemValue = newGrid[row][col].gemValue;
+
+        // 横方向に連続するジェムをチェック
+        let horizontalMatches = 1;
+        for (let i = col + 1; i < numCols; i++) {
+          if (newGrid[row][i].gemValue === gemValue) {
+            horizontalMatches++;
+          } else {
+            break;
+          }
+        }
+
+        // 縦方向に連続するジェムをチェック
+        let verticalMatches = 1;
+        for (let i = row + 1; i < numRows; i++) {
+          if (newGrid[i][col].gemValue === gemValue) {
+            verticalMatches++;
+          } else {
+            break;
+          }
+        }
+
+        // 3つ以上の連続したジェムがあれば消す
+        if (horizontalMatches >= 3) {
+          for (let i = col; i < col + horizontalMatches; i++) {
+            newGrid[row][i].gemValue = -1; // ジェムの値をリセット
+          }
+        }
+        if (verticalMatches >= 3) {
+          for (let i = row; i < row + verticalMatches; i++) {
+            newGrid[i][col].gemValue = -1; // ジェムの値をリセット
+          }
+        }
+      }
+    }
+
+    return newGrid;
   }
 
   return (
