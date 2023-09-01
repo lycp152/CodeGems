@@ -157,7 +157,16 @@ const Play: React.FC<PlayProps> = ({
       let newRow = numRows - 1;
       for (let row = numRows - 1; row >= 0; row--) {
         if (newGrid[row][col].gemValue === -1) {
-          // ジェムが消えたら何もしない
+          // ジェムが消えたら新しいランダムなジェムを生成して埋める
+          const excludedValues: number[] = [];
+          if (row >= 2) {
+            excludedValues.push(
+              ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
+            );
+          }
+          const gemValue = generateRandomGemValue(excludedValues);
+          const backgroundColor = generateRandomBackgroundColor();
+          newGrid[row][col] = { gemValue, backgroundColor };
         } else {
           // ジェムが消えていない場合、その位置にジェムを移動
           newGrid[newRow][col].gemValue = newGrid[row][col].gemValue;
@@ -166,7 +175,15 @@ const Play: React.FC<PlayProps> = ({
       }
       // 残りの行に対してジェムが消えた直後に上にあるジェムが下に移動しなかった場合、その行を空にする
       for (let i = newRow; i >= 0; i--) {
-        newGrid[i][col].gemValue = -1;
+        const excludedValues: number[] = [];
+        if (i >= 2) {
+          excludedValues.push(
+            ...newGrid.slice(i - 2, i).map((r) => r[col].gemValue)
+          );
+        }
+        const gemValue = generateRandomGemValue(excludedValues);
+        const backgroundColor = generateRandomBackgroundColor();
+        newGrid[i][col] = { gemValue, backgroundColor };
       }
     }
 
