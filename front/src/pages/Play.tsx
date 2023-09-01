@@ -170,6 +170,7 @@ const Play: React.FC<PlayProps> = ({
   // 連続するジェムを消す関数
   function removeMatches(currentGrid: Gem[][]): Gem[][] {
     const newGrid = currentGrid.map((row) => [...row]);
+    let hasMatches = false;
 
     // 横方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
     for (let row = 0; row < numRows; row++) {
@@ -188,6 +189,7 @@ const Play: React.FC<PlayProps> = ({
 
         // 3つ以上の連続したジェムがあれば消す
         if (horizontalMatches >= MIN_MATCH_COUNT) {
+          hasMatches = true;
           for (let i = col; i < col + horizontalMatches; i++) {
             newGrid[row][i].gemValue = -1; // ジェムの値をリセット
           }
@@ -212,6 +214,7 @@ const Play: React.FC<PlayProps> = ({
 
         // 3つ以上の連続したジェムがあれば消す
         if (verticalMatches >= 3) {
+          hasMatches = true;
           for (let i = row; i < row + verticalMatches; i++) {
             newGrid[i][col].gemValue = -1; // ジェムの値をリセット
           }
@@ -237,7 +240,13 @@ const Play: React.FC<PlayProps> = ({
       }
     }
 
-    return newGrid;
+    // 新たなマッチが見つかった場合、再帰的に続行
+    if (hasMatches) {
+      return removeMatches(newGrid);
+    } else {
+      // マッチが見つからない場合は終了
+      return newGrid;
+    }
   }
 
   // 背景色に基づいて得点を計算する関数
