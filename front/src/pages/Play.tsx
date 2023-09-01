@@ -101,6 +101,140 @@ const Play: React.FC<PlayProps> = ({
     };
   }, [setRemainingTime]); // setRemainingTimeが変更されるとEffectが実行される
 
+  // 連続するジェムを消す関数
+  function removeMatchesAndCascade(currentGrid: Gem[][]): void {
+    const newGrid = currentGrid.map((row) => [...row]);
+
+    // 横方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols; col++) {
+        const gemValue = newGrid[row][col].gemValue;
+
+        // 横方向に連続するジェムをチェック
+        let horizontalMatches = 1;
+        for (let i = col + 1; i < numCols; i++) {
+          if (newGrid[row][i].gemValue === gemValue) {
+            horizontalMatches++;
+          } else {
+            break;
+          }
+        }
+
+        // 3つ以上の連続したジェムがあれば消す
+        if (horizontalMatches >= MIN_MATCH_COUNT) {
+          for (let i = col; i < col + horizontalMatches; i++) {
+            newGrid[row][i].gemValue = -1; // ジェムの値をリセット
+          }
+        }
+      }
+    }
+
+    // 縦方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
+    for (let col = 0; col < numCols; col++) {
+      for (let row = 0; row < numRows; row++) {
+        const gemValue = newGrid[row][col].gemValue;
+
+        // 縦方向に連続するジェムをチェック
+        let verticalMatches = 1;
+        for (let i = row + 1; i < numRows; i++) {
+          if (newGrid[i][col].gemValue === gemValue) {
+            verticalMatches++;
+          } else {
+            break;
+          }
+        }
+
+        // 3つ以上の連続したジェムがあれば消す
+        if (verticalMatches >= MIN_MATCH_COUNT) {
+          for (let i = row; i < row + verticalMatches; i++) {
+            newGrid[i][col].gemValue = -1; // ジェムの値をリセット
+          }
+        }
+      }
+    }
+
+    // ジェムが消えた直後に上にあるジェムを下に移動する処理
+    for (let col = 0; col < numCols; col++) {
+      let newRow = numRows - 1;
+      for (let row = numRows - 1; row >= 0; row--) {
+        if (newGrid[row][col].gemValue === -1) {
+          // ジェムが消えたら何もしない
+        } else {
+          // ジェムが消えていない場合、その位置にジェムを移動
+          newGrid[newRow][col].gemValue = newGrid[row][col].gemValue;
+          newRow--;
+        }
+      }
+      // 残りの行に対してジェムが消えた直後に上にあるジェムが下に移動しなかった場合、その行を空にする
+      for (let i = newRow; i >= 0; i--) {
+        newGrid[i][col].gemValue = -1;
+      }
+    }
+
+    // 得点を計算して加算
+    const newScore = newGrid.reduce(
+      (acc, row) =>
+        acc +
+        row.reduce(
+          (rowAcc, gem) =>
+            // ジェムが消えた場合、背景色に応じて得点を加算
+            gem.gemValue === -1
+              ? rowAcc + getScoreByBackgroundColor(gem.backgroundColor)
+              : rowAcc,
+          0
+        ),
+      0
+    );
+
+    // アニメーションが完了したら gem-fall クラスを削除
+    setTimeout(() => {
+      setGrid(newGrid); // グリッドを更新
+      setScore(newScore); // 得点を更新
+
+      // 連続しているか再度判定
+      const hasMatches = checkForMatches(newGrid);
+      if (hasMatches) {
+        // 連続している場合、再帰的に removeMatchesAndCascade を呼び出す
+        removeMatchesAndCascade(newGrid);
+      } else {
+        setSelectedGem(null); // 選択されたジェムをリセット
+      }
+    });
+  }
+
+  // ジェムの連続判定を行う関数
+  function checkForMatches(gridToCheck: Gem[][]): boolean {
+    // 横方向のマッチングをチェック
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols - 2; col++) {
+        if (
+          gridToCheck[row][col].gemValue !== -1 &&
+          gridToCheck[row][col].gemValue ===
+            gridToCheck[row][col + 1].gemValue &&
+          gridToCheck[row][col].gemValue === gridToCheck[row][col + 2].gemValue
+        ) {
+          return true; // 3つ以上の連続が見つかったらtrueを返す
+        }
+      }
+    }
+
+    // 縦方向のマッチングをチェック
+    for (let col = 0; col < numCols; col++) {
+      for (let row = 0; row < numRows - 2; row++) {
+        if (
+          gridToCheck[row][col].gemValue !== -1 &&
+          gridToCheck[row][col].gemValue ===
+            gridToCheck[row + 1][col].gemValue &&
+          gridToCheck[row][col].gemValue === gridToCheck[row + 2][col].gemValue
+        ) {
+          return true; // 3つ以上の連続が見つかったらtrueを返す
+        }
+      }
+    }
+
+    return false; // 連続が見つからなかったらfalseを返す
+  }
+
   // ジェムがクリックされたときの処理
   function handleGemClick(row: number, col: number): void {
     if (selectedGem === null) {
@@ -135,117 +269,10 @@ const Play: React.FC<PlayProps> = ({
         updatedGrid[row][col].className = CSS_CLASSES.GEM_FALL;
 
         // グリッドを更新した後、連続するジェムを消す処理を追加
-        const updatedGridWithMatches = removeMatches(updatedGrid);
-
-        // 得点を計算して加算
-        const newScore = updatedGridWithMatches.reduce(
-          (acc, row) =>
-            acc +
-            row.reduce(
-              (rowAcc, gem) =>
-                // ジェムが消えた場合、背景色に応じて得点を加算
-                gem.gemValue === -1
-                  ? rowAcc + getScoreByBackgroundColor(gem.backgroundColor)
-                  : rowAcc,
-              0
-            ),
-          0
-        );
-
-        // アニメーションが完了したら gem-fall クラスを削除
-        setTimeout(() => {
-          updatedGrid[selectedGem.row][selectedGem.col].className =
-            CSS_CLASSES.GEM;
-          updatedGrid[row][col].className = CSS_CLASSES.GEM;
-          setGrid(updatedGridWithMatches); // グリッドを更新
-          setScore(newScore); // 得点を更新
-          setSelectedGem(null); // 選択されたジェムをリセット
-        });
-      } else {
-        setSelectedGem({ row, col });
+        removeMatchesAndCascade(updatedGrid);
       }
-    }
-  }
 
-  // 連続するジェムを消す関数
-  function removeMatches(currentGrid: Gem[][]): Gem[][] {
-    const newGrid = currentGrid.map((row) => [...row]);
-    let hasMatches = false;
-
-    // 横方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
-    for (let row = 0; row < numRows; row++) {
-      for (let col = 0; col < numCols; col++) {
-        const gemValue = newGrid[row][col].gemValue;
-
-        // 横方向に連続するジェムをチェック
-        let horizontalMatches = 1;
-        for (let i = col + 1; i < numCols; i++) {
-          if (newGrid[row][i].gemValue === gemValue) {
-            horizontalMatches++;
-          } else {
-            break;
-          }
-        }
-
-        // 3つ以上の連続したジェムがあれば消す
-        if (horizontalMatches >= MIN_MATCH_COUNT) {
-          hasMatches = true;
-          for (let i = col; i < col + horizontalMatches; i++) {
-            newGrid[row][i].gemValue = -1; // ジェムの値をリセット
-          }
-        }
-      }
-    }
-
-    // 縦方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
-    for (let col = 0; col < numCols; col++) {
-      for (let row = 0; row < numRows; row++) {
-        const gemValue = newGrid[row][col].gemValue;
-
-        // 縦方向に連続するジェムをチェック
-        let verticalMatches = 1;
-        for (let i = row + 1; i < numRows; i++) {
-          if (newGrid[i][col].gemValue === gemValue) {
-            verticalMatches++;
-          } else {
-            break;
-          }
-        }
-
-        // 3つ以上の連続したジェムがあれば消す
-        if (verticalMatches >= 3) {
-          hasMatches = true;
-          for (let i = row; i < row + verticalMatches; i++) {
-            newGrid[i][col].gemValue = -1; // ジェムの値をリセット
-          }
-        }
-      }
-    }
-
-    // ジェムが消えた直後に上にあるジェムを下に移動する処理
-    for (let col = 0; col < numCols; col++) {
-      let newRow = numRows - 1;
-      for (let row = numRows - 1; row >= 0; row--) {
-        if (newGrid[row][col].gemValue === -1) {
-          // ジェムが消えたら何もしない
-        } else {
-          // ジェムが消えていない場合、その位置にジェムを移動
-          newGrid[newRow][col].gemValue = newGrid[row][col].gemValue;
-          newRow--;
-        }
-      }
-      // 残りの行に対してジェムが消えた直後に上にあるジェムが下に移動しなかった場合、その行を空にする
-      for (let i = newRow; i >= 0; i--) {
-        newGrid[i][col].gemValue = -1;
-      }
-    }
-
-    // 新たなマッチが見つかった場合、再帰的に続行
-    if (hasMatches) {
-      return removeMatches(newGrid);
-    } else {
-      // マッチが見つからない場合は終了
-      return newGrid;
+      setSelectedGem(null);
     }
   }
 
