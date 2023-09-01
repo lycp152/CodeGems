@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Play.css";
 import GemGrid from "../components/GemGrid";
-
-// グリッドの行数、列数、ジェムの種類数を定義
-const numRows = 8; // グリッドの行数
-const numCols = 7; // グリッドの列数
-const numGemTypes = 6; // ジェムの種類数
+import {
+  numRows,
+  numCols,
+  numGemTypes,
+  gemBackgroundColors,
+} from "../components/constants"; // 定数の外部化
 
 // ジェムの型を定義
 interface Gem {
@@ -13,15 +14,6 @@ interface Gem {
   backgroundColor: string;
   className?: string; // classNameプロパティを追加
 }
-
-// ジェムの背景色とジェムの値のマッピング
-const gemBackgroundColors: Record<string, number> = {
-  "#12151A": 1,
-  "#0E351F": 2,
-  "#0D5C25": 3,
-  "#249932": 4,
-  "#34CE42": 5,
-};
 
 function generateRandomGemValue(excludedValues: number[]): number {
   let newValue;
