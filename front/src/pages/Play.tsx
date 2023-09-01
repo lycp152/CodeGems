@@ -169,39 +169,58 @@ const Play: React.FC<PlayProps> = ({
   function removeMatches(currentGrid: Gem[][]): Gem[][] {
     const newGrid = currentGrid.map((row) => [...row]);
 
-    for (let row = 0; row < numRows; row++) {
-      for (let col = 0; col < numCols; col++) {
+    for (let col = 0; col < numCols; col++) {
+      let emptyRowCounter = 0; // ジェムが消えた回数をカウント
+
+      // 上から下に移動させるために逆順でループ
+      for (let row = numRows - 1; row >= 0; row--) {
         const gemValue = newGrid[row][col].gemValue;
 
-        // 横方向に連続するジェムをチェック
-        let horizontalMatches = 1;
-        for (let i = col + 1; i < numCols; i++) {
-          if (newGrid[row][i].gemValue === gemValue) {
-            horizontalMatches++;
-          } else {
-            break;
-          }
+        if (gemValue === -1) {
+          emptyRowCounter++;
+        } else if (emptyRowCounter > 0) {
+          // ジェムが消えた場合、上に詰まっているジェムを下に移動
+          newGrid[row + emptyRowCounter][col] = { ...newGrid[row][col] };
+          newGrid[row][col].gemValue = -1; // 上に詰まった位置を空にする
         }
+      }
 
-        // 縦方向に連続するジェムをチェック
-        let verticalMatches = 1;
-        for (let i = row + 1; i < numRows; i++) {
-          if (newGrid[i][col].gemValue === gemValue) {
-            verticalMatches++;
-          } else {
-            break;
-          }
-        }
+      // 横方向と縦方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
 
-        // 3つ以上の連続したジェムがあれば消す
-        if (horizontalMatches >= 3) {
-          for (let i = col; i < col + horizontalMatches; i++) {
-            newGrid[row][i].gemValue = -1; // ジェムの値をリセット
+      for (let row = 0; row < numRows; row++) {
+        for (let col = 0; col < numCols; col++) {
+          const gemValue = newGrid[row][col].gemValue;
+
+          // 横方向に連続するジェムをチェック
+          let horizontalMatches = 1;
+          for (let i = col + 1; i < numCols; i++) {
+            if (newGrid[row][i].gemValue === gemValue) {
+              horizontalMatches++;
+            } else {
+              break;
+            }
           }
-        }
-        if (verticalMatches >= 3) {
-          for (let i = row; i < row + verticalMatches; i++) {
-            newGrid[i][col].gemValue = -1; // ジェムの値をリセット
+
+          // 縦方向に連続するジェムをチェック
+          let verticalMatches = 1;
+          for (let i = row + 1; i < numRows; i++) {
+            if (newGrid[i][col].gemValue === gemValue) {
+              verticalMatches++;
+            } else {
+              break;
+            }
+          }
+
+          // 3つ以上の連続したジェムがあれば消す
+          if (horizontalMatches >= 3) {
+            for (let i = col; i < col + horizontalMatches; i++) {
+              newGrid[row][i].gemValue = -1; // ジェムの値をリセット
+            }
+          }
+          if (verticalMatches >= 3) {
+            for (let i = row; i < row + verticalMatches; i++) {
+              newGrid[i][col].gemValue = -1; // ジェムの値をリセット
+            }
           }
         }
       }
