@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Play.css";
 import GemGrid from "../components/GemGrid";
+import GameInfo from "../components/GameInfo";
 import {
   numRows,
   numCols,
@@ -93,15 +94,6 @@ const Play: React.FC<PlayProps> = ({
       clearInterval(timer);
     };
   }, [setRemainingTime]); // setRemainingTimeが変更されるとEffectが実行される
-
-  // setRemainingTimeが変更されるとEffectが実行される
-  function formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
-      .toString()
-      .padStart(2, "0")}`;
-  }
 
   // ジェムがクリックされたときの処理
   function handleGemClick(row: number, col: number): void {
@@ -260,20 +252,7 @@ const Play: React.FC<PlayProps> = ({
 
   return (
     <div className="play-container">
-      <div className="game-info">
-        <div className="score-time-container">
-          <div className="score">score: {score}</div>
-          <div className="remaining-time">
-            time: {formatTime(remainingTime)}
-          </div>
-        </div>
-        <div className="time-bar">
-          <div
-            className="time-remaining"
-            style={{ width: `${(remainingTime / 120) * 100}%` }}
-          />
-        </div>
-      </div>
+      <GameInfo score={score} remainingTime={remainingTime} />
       <GemGrid
         grid={grid}
         selectedGem={selectedGem}
