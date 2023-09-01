@@ -7,7 +7,9 @@ import {
   numCols,
   numGemTypes,
   gemBackgroundColors,
-} from "../components/constants"; // 定数の外部化
+  MIN_MATCH_COUNT,
+  CSS_CLASSES,
+} from "../components/constants";
 
 // ジェムの型を定義
 interface Gem {
@@ -51,34 +53,35 @@ const Play: React.FC<PlayProps> = ({
     col: number;
   } | null>(null); // 選択されたジェムの位置
 
-  // グリッドの初期化
-  function initializeGrid(): Gem[][] {
-    const newGrid: Gem[][] = [];
-    for (let row = 0; row < numRows; row++) {
-      const newRow: Gem[] = [];
-      for (let col = 0; col < numCols; col++) {
-        // 隣接するジェムの値を除外してランダムなジェムを生成
-        const excludedValues: number[] = [];
-        if (row >= 2) {
-          excludedValues.push(
-            ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
-          );
-        }
-        if (col >= 2) {
-          excludedValues.push(
-            ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
-          );
-        }
-        const gemValue = generateRandomGemValue(excludedValues);
-        const backgroundColor = generateRandomBackgroundColor();
-        newRow.push({ gemValue, backgroundColor });
-      }
-      newGrid.push(newRow);
-    }
-    return newGrid;
-  }
-
+  // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
   useEffect(() => {
+    // グリッドを初期化
+    function initializeGrid(): Gem[][] {
+      const newGrid: Gem[][] = [];
+      for (let row = 0; row < numRows; row++) {
+        const newRow: Gem[] = [];
+        for (let col = 0; col < numCols; col++) {
+          // 隣接するジェムの値を除外してランダムなジェムを生成
+          const excludedValues: number[] = [];
+          if (row >= 2) {
+            excludedValues.push(
+              ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
+            );
+          }
+          if (col >= 2) {
+            excludedValues.push(
+              ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
+            );
+          }
+          const gemValue = generateRandomGemValue(excludedValues);
+          const backgroundColor = generateRandomBackgroundColor();
+          newRow.push({ gemValue, backgroundColor });
+        }
+        newGrid.push(newRow);
+      }
+      return newGrid;
+    }
+
     const newGrid = initializeGrid();
     // グリッドを更新
     setGrid(newGrid);
@@ -124,8 +127,8 @@ const Play: React.FC<PlayProps> = ({
 
         // アニメーションをトリガーするために gem-fall クラスを追加
         updatedGrid[selectedGem.row][selectedGem.col].className =
-          "gem gem-fall";
-        updatedGrid[row][col].className = "gem gem-fall";
+          CSS_CLASSES.GEM_FALL;
+        updatedGrid[row][col].className = CSS_CLASSES.GEM_FALL;
 
         // グリッドを更新した後、連続するジェムを消す処理を追加
         const updatedGridWithMatches = removeMatches(updatedGrid);
@@ -147,8 +150,9 @@ const Play: React.FC<PlayProps> = ({
 
         // アニメーションが完了したら gem-fall クラスを削除
         setTimeout(() => {
-          updatedGrid[selectedGem.row][selectedGem.col].className = "gem";
-          updatedGrid[row][col].className = "gem";
+          updatedGrid[selectedGem.row][selectedGem.col].className =
+            CSS_CLASSES.GEM;
+          updatedGrid[row][col].className = CSS_CLASSES.GEM;
           setGrid(updatedGridWithMatches); // グリッドを更新
           setScore(newScore); // 得点を更新
           setSelectedGem(null); // 選択されたジェムをリセット
@@ -179,7 +183,7 @@ const Play: React.FC<PlayProps> = ({
         }
 
         // 3つ以上の連続したジェムがあれば消す
-        if (horizontalMatches >= 3) {
+        if (horizontalMatches >= MIN_MATCH_COUNT) {
           for (let i = col; i < col + horizontalMatches; i++) {
             newGrid[row][i].gemValue = -1; // ジェムの値をリセット
           }

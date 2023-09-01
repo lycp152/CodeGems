@@ -11,3 +11,10 @@ export const gemBackgroundColors: Record<string, number> = {
   "#249932": 4,
   "#34CE42": 5,
 };
+
+export const CSS_CLASSES = {
+  GEM: "gem",
+  GEM_FALL: "gem gem-fall",
+};
+
+export const MIN_MATCH_COUNT = 3;
