@@ -15,9 +15,10 @@ import {
 interface Gem {
   gemValue: number;
   backgroundColor: string;
-  className?: string; // classNameプロパティを追加
+  className?: string;
 }
 
+// 新しいランダムなジェムの値を生成する関数
 function generateRandomGemValue(excludedValues: number[]): number {
   let newValue;
   do {
@@ -26,6 +27,7 @@ function generateRandomGemValue(excludedValues: number[]): number {
   return newValue;
 }
 
+// 新しいランダムな背景色を生成する関数
 function generateRandomBackgroundColor(): string {
   const backgroundColors = Object.keys(gemBackgroundColors);
   const randomIndex = Math.floor(Math.random() * backgroundColors.length);
@@ -55,7 +57,7 @@ const Play: React.FC<PlayProps> = ({
 
   // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
   useEffect(() => {
-    // グリッドを初期化
+    // グリッドを初期化する関数
     function initializeGrid(): Gem[][] {
       const newGrid: Gem[][] = [];
       for (let row = 0; row < numRows; row++) {
@@ -64,11 +66,13 @@ const Play: React.FC<PlayProps> = ({
           // 隣接するジェムの値を除外してランダムなジェムを生成
           const excludedValues: number[] = [];
           if (row >= 2) {
+            // 上方向に2つの行をチェック
             excludedValues.push(
               ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
             );
           }
           if (col >= 2) {
+            // 左方向に2つの列をチェック
             excludedValues.push(
               ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
             );
@@ -236,6 +240,7 @@ const Play: React.FC<PlayProps> = ({
     return newGrid;
   }
 
+  // 背景色に基づいて得点を計算する関数
   function getScoreByBackgroundColor(backgroundColor: string): number {
     switch (backgroundColor) {
       case "#12151A":
@@ -255,7 +260,9 @@ const Play: React.FC<PlayProps> = ({
 
   return (
     <div className="play-container">
+      {/* ゲーム情報コンポーネント */}
       <GameInfo score={score} remainingTime={remainingTime} />
+      {/* ジェムグリッドコンポーネント */}
       <GemGrid
         grid={grid}
         selectedGem={selectedGem}
