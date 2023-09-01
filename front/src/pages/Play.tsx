@@ -108,6 +108,7 @@ const Play: React.FC<PlayProps> = ({
     if (selectedGem === null) {
       setSelectedGem({ row, col });
     } else {
+      // クリックされたジェムが選択されたジェムに隣接しているかを確認
       const isAdjacent =
         (Math.abs(selectedGem.row - row) === 1 && selectedGem.col === col) ||
         (Math.abs(selectedGem.col - col) === 1 && selectedGem.row === row);
@@ -117,14 +118,17 @@ const Play: React.FC<PlayProps> = ({
           grid[selectedGem.row][selectedGem.col].gemValue;
         const clickedGemValue = grid[row][col].gemValue;
 
+        // 選択されたジェムとクリックされたジェムの値（gemValue）と位置を入れ替えてグリッドを更新
         const updatedGrid = grid.map((gridRow, rowIndex) =>
           gridRow.map((gem, colIndex) => {
             if (rowIndex === selectedGem.row && colIndex === selectedGem.col) {
+              // クリックされたジェムの値（gemValue）と位置を選択されたジェムに設定
               return {
                 ...gem,
                 gemValue: clickedGemValue,
               };
             } else if (rowIndex === row && colIndex === col) {
+              // 選択されたジェムの値（gemValue）と位置をクリックされたジェムに設定
               return {
                 ...gem,
                 gemValue: selectedGemValue,
@@ -137,7 +141,37 @@ const Play: React.FC<PlayProps> = ({
         // グリッドを更新した後、連続するジェムを消す処理を追加
         const updatedGridWithMatches = removeMatches(updatedGrid);
 
+        // 得点を計算して加算
+        let newScore = score;
+        updatedGridWithMatches.forEach((row) => {
+          row.forEach((gem) => {
+            if (gem.gemValue === -1) {
+              // ジェムが消えた場合、背景色に応じて得点を加算
+              switch (gem.backgroundColor) {
+                case "#12151A":
+                  newScore += 10;
+                  break;
+                case "#0E351F":
+                  newScore += 20;
+                  break;
+                case "#0D5C25":
+                  newScore += 30;
+                  break;
+                case "#249932":
+                  newScore += 40;
+                  break;
+                case "#34CE42":
+                  newScore += 50;
+                  break;
+                default:
+                  break;
+              }
+            }
+          });
+        });
+
         setGrid(updatedGridWithMatches); // グリッドを更新
+        setScore(newScore); // 得点を更新
         setSelectedGem(null); // 選択されたジェムをリセット
       } else {
         setSelectedGem({ row, col });
