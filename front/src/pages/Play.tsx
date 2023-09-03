@@ -103,138 +103,160 @@ const Play: React.FC<PlayProps> = ({
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {
     const newGrid = currentGrid.map((row) => [...row]);
-    let gemClasses: string[] = []; // ジェムのクラス名を管理する変数
+    const gemClasses: string[] = []; // ジェムのクラス名を管理する変数
+
+    // マッチングをチェックしてジェムを消す
+    function checkAndRemoveMatches() {
+      checkHorizontalMatches();
+      checkVerticalMatches();
+    }
 
     // 横方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
-    for (let row = 0; row < numRows; row++) {
-      for (let col = 0; col < numCols; col++) {
-        const gemValue = newGrid[row][col].gemValue;
+    function checkHorizontalMatches() {
+      for (let row = 0; row < numRows; row++) {
+        for (let col = 0; col < numCols; col++) {
+          const gemValue = newGrid[row][col].gemValue;
+          let horizontalMatches = 1;
 
-        // 横方向に連続するジェムをチェック
-        let horizontalMatches = 1;
-        for (let i = col + 1; i < numCols; i++) {
-          if (newGrid[row][i].gemValue === gemValue) {
-            horizontalMatches++;
-          } else {
-            break;
+          for (let i = col + 1; i < numCols; i++) {
+            if (newGrid[row][i].gemValue === gemValue) {
+              horizontalMatches++;
+            } else {
+              break;
+            }
           }
-        }
 
-        // 3つ以上の連続したジェムがあれば消す
-        if (horizontalMatches >= MIN_MATCH_COUNT) {
-          gemClasses.push("blinking"); // クラスを追加
-          for (let i = col; i < col + horizontalMatches; i++) {
-            newGrid[row][i].gemValue = -1; // ジェムの値をリセット
+          if (horizontalMatches >= MIN_MATCH_COUNT) {
+            removeHorizontalMatches(row, col, horizontalMatches);
           }
         }
       }
     }
 
     // 縦方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
-    for (let col = 0; col < numCols; col++) {
-      for (let row = 0; row < numRows; row++) {
-        const gemValue = newGrid[row][col].gemValue;
+    function checkVerticalMatches() {
+      for (let col = 0; col < numCols; col++) {
+        for (let row = 0; row < numRows; row++) {
+          const gemValue = newGrid[row][col].gemValue;
+          let verticalMatches = 1;
 
-        // 縦方向に連続するジェムをチェック
-        let verticalMatches = 1;
-        for (let i = row + 1; i < numRows; i++) {
-          if (newGrid[i][col].gemValue === gemValue) {
-            verticalMatches++;
-          } else {
-            break;
+          for (let i = row + 1; i < numRows; i++) {
+            if (newGrid[i][col].gemValue === gemValue) {
+              verticalMatches++;
+            } else {
+              break;
+            }
           }
-        }
 
-        // 3つ以上の連続したジェムがあれば消す
-        if (verticalMatches >= MIN_MATCH_COUNT) {
-          gemClasses.push("blinking"); // クラスを追加
-          for (let i = row; i < row + verticalMatches; i++) {
-            newGrid[i][col].gemValue = -1; // ジェムの値をリセット
+          if (verticalMatches >= MIN_MATCH_COUNT) {
+            removeVerticalMatches(row, col, verticalMatches);
           }
         }
       }
     }
 
-    // ジェムが消えた直後に上にあるジェムを下に移動する処理
-    for (let col = 0; col < numCols; col++) {
-      let newRow = numRows - 1;
-      for (let row = numRows - 1; row >= 0; row--) {
-        if (newGrid[row][col].gemValue === -1) {
-          // ジェムが消えたら何もしない
-        } else {
-          // ジェムが消えていない場合、その位置にジェムを移動
-          newGrid[newRow][col].gemValue = newGrid[row][col].gemValue;
-          newRow--;
-        }
+    // 連続したジェムを消す処理
+    function removeHorizontalMatches(
+      row: number,
+      col: number,
+      matches: number
+    ) {
+      gemClasses.push("blinking");
+      for (let i = col; i < col + matches; i++) {
+        newGrid[row][i].gemValue = -1;
       }
-      // 残りの行に対してジェムが消えた直後に上にあるジェムが下に移動しなかった場合、その行を空にする
-      for (let i = newRow; i >= 0; i--) {
+    }
+
+    // 連続したジェムを消す処理
+    function removeVerticalMatches(row: number, col: number, matches: number) {
+      gemClasses.push("blinking");
+      for (let i = row; i < row + matches; i++) {
         newGrid[i][col].gemValue = -1;
       }
     }
 
-    // 得点を計算して加算
-    const newScore = newGrid.reduce(
-      (acc, row) =>
-        acc +
-        row.reduce(
-          (rowAcc, gem) =>
-            // ジェムが消えた場合、背景色に応じて得点を加算
-            gem.gemValue === -1
-              ? rowAcc + getScoreByBackgroundColor(gem.backgroundColor)
-              : rowAcc,
-          0
-        ),
-      0
-    );
-
-    // グリッドを更新
-    setGrid(newGrid);
-    // スコアを更新
-    setScore((prevScore) => prevScore + newScore);
-
-    // 新しいランダムなジェムを生成して埋める
-    for (let col = 0; col < numCols; col++) {
-      let emptySpaces = 0; // 空のセル数を追跡
-      for (let row = numRows - 1; row >= 0; row--) {
-        if (newGrid[row][col].gemValue === -1) {
-          // ジェムがない場合、ランダムなジェムを生成
-          const randomGemValue = getRandomGemValue(); // ランダムなジェムの値を取得
-          const initialBackgroundColor = newGrid[row][col].backgroundColor; // 以前のジェムの背景色を使用
-          const newGem = {
-            gemValue: randomGemValue,
-            backgroundColor: initialBackgroundColor,
-          };
-          newGrid[row][col] = newGem;
-          emptySpaces++;
-        } else if (emptySpaces > 0) {
-          // 空のセルが上にある場合、ジェムを下に移動
-          const currentGem = newGrid[row][col];
-          newGrid[row + emptySpaces][col] = currentGem;
-          newGrid[row][col] = { gemValue: -1, backgroundColor: "" }; // 背景色は空にするか、適切な初期値を設定してください
+    // ジェムが消えた直後に上にあるジェムを下に移動する処理
+    function cascadeGems() {
+      for (let col = 0; col < numCols; col++) {
+        let newRow = numRows - 1;
+        for (let row = numRows - 1; row >= 0; row--) {
+          if (newGrid[row][col].gemValue !== -1) {
+            newGrid[newRow][col].gemValue = newGrid[row][col].gemValue;
+            newRow--;
+          }
+        }
+        for (let i = newRow; i >= 0; i--) {
+          newGrid[i][col].gemValue = -1;
         }
       }
     }
 
-    // ジェムが新しい配置でマッチするかどうかをチェック
-    if (checkForMatches(newGrid)) {
-      // マッチが見つかった場合、再帰的にマッチを削除し続ける
-      removeMatchesAndCascade(newGrid);
+    // 得点を計算して加算
+    function calculateAndSetScore() {
+      const newScore = newGrid.reduce(
+        (acc, row) =>
+          acc +
+          row.reduce(
+            (rowAcc, gem) =>
+              gem.gemValue === -1
+                ? rowAcc + getScoreByBackgroundColor(gem.backgroundColor)
+                : rowAcc,
+            0
+          ),
+        0
+      );
+
+      setGrid(newGrid);
+      setScore((prevScore) => prevScore + newScore);
     }
 
-    // ランダムなジェムの値を生成する関数（例: 0 から 4 のランダムな整数を生成）
-    function getRandomGemValue(): number {
-      return Math.floor(Math.random() * 5); // 0 から 4 のランダムな整数
+    // 新しいランダムなジェムを生成して埋める
+    function fillEmptySpaces() {
+      for (let col = 0; col < numCols; col++) {
+        let emptySpaces = 0;
+        for (let row = numRows - 1; row >= 0; row--) {
+          if (newGrid[row][col].gemValue === -1) {
+            const randomGemValue = getRandomGemValue();
+            const initialBackgroundColor = newGrid[row][col].backgroundColor;
+            const newGem = {
+              gemValue: randomGemValue,
+              backgroundColor: initialBackgroundColor,
+            };
+            newGrid[row][col] = newGem;
+            emptySpaces++;
+          } else if (emptySpaces > 0) {
+            const currentGem = newGrid[row][col];
+            newGrid[row + emptySpaces][col] = currentGem;
+            newGrid[row][col] = { gemValue: -1, backgroundColor: "" };
+          }
+        }
+      }
     }
 
     // 連続しているか再度判定
-    const hasMatches = checkForMatches(newGrid);
-    if (hasMatches) {
-      // 連続している場合、再帰的に removeMatchesAndCascade を呼び出す
-      removeMatchesAndCascade(newGrid);
-    } else {
-      setSelectedGem(null); // 選択されたジェムをリセット
+    function checkForAndRemoveMatchesRecursively() {
+      if (checkForMatches(newGrid)) {
+        removeMatchesAndCascade(newGrid);
+      } else {
+        setSelectedGem(null);
+      }
     }
+
+    // マッチングをチェックしてジェムを消す
+    checkAndRemoveMatches();
+    // ジェムが消えた直後に上にあるジェムを下に移動
+    cascadeGems();
+    // 得点を計算して加算
+    calculateAndSetScore();
+    // 新しいランダムなジェムを生成して埋める
+    fillEmptySpaces();
+    // 連続しているか再度判定
+    checkForAndRemoveMatchesRecursively();
+  }
+
+  // ランダムなジェムの値を生成する関数
+  function getRandomGemValue(): number {
+    return Math.floor(Math.random() * 6); // 0 から 5 のランダムな整数
   }
 
   // ジェムの連続判定を行う関数
