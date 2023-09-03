@@ -103,6 +103,7 @@ const Play: React.FC<PlayProps> = ({
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {
     const newGrid = currentGrid.map((row) => [...row]);
+    let gemClasses: string[] = []; // ジェムのクラス名を管理する変数
 
     // 横方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
     for (let row = 0; row < numRows; row++) {
@@ -121,6 +122,7 @@ const Play: React.FC<PlayProps> = ({
 
         // 3つ以上の連続したジェムがあれば消す
         if (horizontalMatches >= MIN_MATCH_COUNT) {
+          gemClasses.push("blinking"); // クラスを追加
           for (let i = col; i < col + horizontalMatches; i++) {
             newGrid[row][i].gemValue = -1; // ジェムの値をリセット
           }
@@ -145,6 +147,7 @@ const Play: React.FC<PlayProps> = ({
 
         // 3つ以上の連続したジェムがあれば消す
         if (verticalMatches >= MIN_MATCH_COUNT) {
+          gemClasses.push("blinking"); // クラスを追加
           for (let i = row; i < row + verticalMatches; i++) {
             newGrid[i][col].gemValue = -1; // ジェムの値をリセット
           }
