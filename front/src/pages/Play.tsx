@@ -187,8 +187,8 @@ const Play: React.FC<PlayProps> = ({
 
     // グリッドを更新
     setGrid(newGrid);
-    // 得点を更新
-    setScore(newScore);
+    // スコアを更新
+    setScore((prevScore) => prevScore + newScore);
 
     // 新しいランダムなジェムを生成して埋める
     for (let col = 0; col < numCols; col++) {
