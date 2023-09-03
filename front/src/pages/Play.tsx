@@ -197,10 +197,10 @@ const Play: React.FC<PlayProps> = ({
         if (newGrid[row][col].gemValue === -1) {
           // ジェムがない場合、ランダムなジェムを生成
           const randomGemValue = getRandomGemValue(); // ランダムなジェムの値を取得
-          const randomBackgroundColor = generateRandomBackgroundColor(); // ランダムな背景色を取得
+          const initialBackgroundColor = newGrid[row][col].backgroundColor; // 以前のジェムの背景色を使用
           const newGem = {
             gemValue: randomGemValue,
-            backgroundColor: randomBackgroundColor,
+            backgroundColor: initialBackgroundColor,
           };
           newGrid[row][col] = newGem;
           emptySpaces++;
