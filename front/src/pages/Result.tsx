@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/Result.css";
 import LongButton from "../components/LongButton";
-import RankingContainer from "../components/RankingContainer"; // 新しいコンポーネントをインポート
+import RankingContainer from "../components/RankingContainer";
 
 interface ResultProps {
   score: number;
@@ -15,8 +15,7 @@ export default function Result({ score, handleBack, handlePlay }: ResultProps) {
       <h1 className="title">result</h1>
       <div className="main-container">
         <div className="score">score: {score}</div>
-        <RankingContainer />{" "}
-        {/* 新しい RankingContainer コンポーネントを追加 */}
+        <RankingContainer />
         <div className="result-button-container">
           <div className="button-wrapper">
             <LongButton label="Share" />

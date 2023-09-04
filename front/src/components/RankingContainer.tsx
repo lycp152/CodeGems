@@ -48,7 +48,6 @@ function RankingContainer() {
         <p>Loading...</p>
       ) : (
         <>
-          <h2 className="ranking-subject">Top 20 Rankings</h2>
           <div className="rankings">
             <div className="top10">
               <ol>

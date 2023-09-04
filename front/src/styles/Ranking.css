@@ -1,10 +1,4 @@
 .ranking-container {
-  button {
-    padding: 10px 20px;
-    font-size: 18px;
-    margin: 5px;
-    cursor: pointer;
-  }
   h2 {
     padding: 0;
   }
@@ -19,7 +13,7 @@ ol {
 }
 
 li {
-  font-size: 20px;
+  font-size: 30px;
   margin-top: 5px;
 }
 
