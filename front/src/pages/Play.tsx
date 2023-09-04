@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/Play.css";
 import GemGrid from "../components/GemGrid";
 import GameInfo from "../components/GameInfo";
+import PlayMenu from "../components/PlayMenu";
 import {
   numRows,
   numCols,
@@ -9,6 +10,7 @@ import {
   gemBackgroundColors,
   MIN_MATCH_COUNT,
 } from "../components/constants";
+//import { usePause } from "../context/PauseContext";
 
 // ジェムの型を定義
 interface Gem {
@@ -48,11 +50,39 @@ const Play: React.FC<PlayProps> = ({
   setScore,
 }) => {
   // グリッドと選択されたジェムの状態を管理するState
-  const [grid, setGrid] = useState<Gem[][]>([]); // グリッドの状態
+  const [grid, setGrid] = useState<Gem[][]>(() => initializeGrid()); // グリッドの状態
   const [selectedGem, setSelectedGem] = useState<{
     row: number;
     col: number;
   } | null>(null); // 選択されたジェムの位置
+  const [isGamePaused, setIsGamePaused] = useState(false);
+
+  // グリッドを初期化する関数
+  function initializeGrid(): Gem[][] {
+    const newGrid: Gem[][] = [];
+    for (let row = 0; row < numRows; row++) {
+      const newRow: Gem[] = [];
+      for (let col = 0; col < numCols; col++) {
+        // 新しいジェムを生成
+        const gemValue = getRandomGemValue();
+        const backgroundColor = generateRandomBackgroundColor();
+        newRow.push({ gemValue, backgroundColor });
+      }
+      newGrid.push(newRow);
+    }
+    return newGrid;
+  }
+
+  // プレイメニューコンポーネントがポーズボタンをクリックしたときの処理
+  const togglePause = () => {
+    setIsGamePaused((prevIsGamePaused) => !prevIsGamePaused);
+  };
+
+  // プレイメニューコンポーネントがホームに戻るボタンをクリックしたときの処理
+  const toggleBackToTitle = () => {
+    // ホーム画面に戻る処理を追加
+    // プレイ画面からホーム画面に戻るための処理を追加してください
+  };
 
   // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
   useEffect(() => {
@@ -91,14 +121,18 @@ const Play: React.FC<PlayProps> = ({
 
     // 1秒ごとにremainingTimeを減少させるタイマーを設定
     const timer = setInterval(() => {
-      setRemainingTime((prevTime) => (prevTime > 0 ? prevTime - 1 : prevTime));
+      if (!isGamePaused && remainingTime > 0) {
+        setRemainingTime((prevTime) =>
+          prevTime > 0 ? prevTime - 1 : prevTime
+        );
+      }
     }, 1000);
 
     // コンポーネントのアンマウント時にタイマーをクリア
     return () => {
       clearInterval(timer);
     };
-  }, [setRemainingTime]); // setRemainingTimeが変更されるとEffectが実行される
+  }, [isGamePaused, remainingTime, setRemainingTime]);
 
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {
@@ -355,6 +389,12 @@ const Play: React.FC<PlayProps> = ({
         grid={grid}
         selectedGem={selectedGem}
         onGemClick={(row, col) => handleGemClick(row, col)}
+      />
+      {/* プレイメニューコンポーネント */}
+      <PlayMenu
+        togglePause={togglePause}
+        toggleBackToTitle={toggleBackToTitle}
+        isGamePaused={isGamePaused}
       />
     </div>
   );

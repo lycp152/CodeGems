@@ -46,3 +46,12 @@
   font-family: "Inter", sans-serif;
   font-weight: bold;
 }
+
+.play-menu {
+  gap: 20px;
+  position: absolute;
+  bottom: 60px;
+  right: 155px;
+  display: flex;
+  flex-direction: column;
+}
