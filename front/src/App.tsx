@@ -53,6 +53,7 @@ const Home: React.FC<HomeProps> = () => {
           <Result
             score={score}
             handleBack={() => handleDetailViewToggle(DetailView.None)}
+            handlePlay={() => handleDetailViewToggle(DetailView.None)}
           />
         );
       default:
