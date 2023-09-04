@@ -4,8 +4,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import { useAuth } from "../context/AuthContext";
 import LongButton from "../components/LongButton";
 import MainMenu from "../components/MainMenu";
-import { useEffect } from "react";
-import {auth, provider} from "../context/Firebase"
+import { auth, provider } from "../context/Firebase"
 import { signInWithPopup } from "firebase/auth";
 
 
@@ -25,16 +24,12 @@ const Title: React.FC<TitleProps> = ({
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
 
-  
-
   const handleLogin = () => {
-
-    signInWithPopup( auth, provider).then((result) => {
-      console.log(result);
+    signInWithPopup( auth, provider ).then(() => {
+      setIsLoggedIn(true);
     }).catch((err) => {
       console.log(err);
     })
-    setIsLoggedIn(true);
   };
 
   const renderButtonSection = () => {
