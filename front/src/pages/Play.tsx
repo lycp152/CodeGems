@@ -3,6 +3,7 @@ import "../styles/Play.css";
 import GemGrid from "../components/GemGrid";
 import GameInfo from "../components/GameInfo";
 import PlayMenu from "../components/PlayMenu";
+import Paused from "../components/Paused";
 import {
   numRows,
   numCols,
@@ -374,12 +375,18 @@ const Play: React.FC<PlayProps> = ({
     <div className="play-container">
       {/* ゲーム情報コンポーネント */}
       <GameInfo score={score} remainingTime={remainingTime} />
-      {/* ジェムグリッドコンポーネント */}
-      <GemGrid
-        grid={grid}
-        selectedGem={selectedGem}
-        onGemClick={(row, col) => handleGemClick(row, col)}
-      />
+      {isGamePaused ? (
+        // isGamePausedがtrueの場合、Pausedを表示
+        <Paused />
+      ) : (
+        // isGamePausedがfalseの場合、通常のGemGridを表示
+        /* ジェムグリッドコンポーネント */
+        <GemGrid
+          grid={grid}
+          selectedGem={selectedGem}
+          onGemClick={(row, col) => handleGemClick(row, col)}
+        />
+      )}
       {/* プレイメニューコンポーネント */}
       <PlayMenu
         togglePause={togglePause}
