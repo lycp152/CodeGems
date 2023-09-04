@@ -66,6 +66,7 @@ const Home: React.FC<HomeProps> = () => {
               setRemainingTime={setRemainingTime}
               score={score}
               setScore={setScore}
+              toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
             />
           );
         } else {

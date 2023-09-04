@@ -40,6 +40,7 @@ interface PlayProps {
   setRemainingTime: React.Dispatch<React.SetStateAction<number>>; // 残り時間を設定する関数
   score: number; // 得点
   setScore: React.Dispatch<React.SetStateAction<number>>; // 得点を設定する関数
+  toggleBackToTitle: () => void;
 }
 
 // ゲームコンポーネント
@@ -48,6 +49,7 @@ const Play: React.FC<PlayProps> = ({
   setRemainingTime,
   score,
   setScore,
+  toggleBackToTitle,
 }) => {
   // グリッドと選択されたジェムの状態を管理するState
   const [grid, setGrid] = useState<Gem[][]>(() => initializeGrid()); // グリッドの状態
@@ -89,12 +91,6 @@ const Play: React.FC<PlayProps> = ({
   // プレイメニューコンポーネントがポーズボタンをクリックしたときの処理
   const togglePause = () => {
     setIsGamePaused((prevIsGamePaused) => !prevIsGamePaused);
-  };
-
-  // プレイメニューコンポーネントがホームに戻るボタンをクリックしたときの処理
-  const toggleBackToTitle = () => {
-    // ホーム画面に戻る処理を追加
-    // プレイ画面からホーム画面に戻るための処理を追加してください
   };
 
   // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
