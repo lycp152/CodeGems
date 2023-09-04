@@ -10,7 +10,6 @@ import {
   gemBackgroundColors,
   MIN_MATCH_COUNT,
 } from "../components/constants";
-//import { usePause } from "../context/PauseContext";
 
 // ジェムの型を定義
 interface Gem {
