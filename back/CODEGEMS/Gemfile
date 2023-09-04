@@ -56,3 +56,5 @@ gem 'httpclient'
 gem 'pry-rails'
 
 gem 'httparty'
+
+gem 'dotenv-rails'
