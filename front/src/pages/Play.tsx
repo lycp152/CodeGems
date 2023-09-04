@@ -121,7 +121,8 @@ const Play: React.FC<PlayProps> = ({
 
     // 1秒ごとにremainingTimeを減少させるタイマーを設定
     const timer = setInterval(() => {
-      if (!isGamePaused && remainingTime > 0) {
+      if (!isGamePaused) {
+        // ゲームが一時停止されていない場合のみ時間を減少させる
         setRemainingTime((prevTime) =>
           prevTime > 0 ? prevTime - 1 : prevTime
         );
@@ -132,7 +133,7 @@ const Play: React.FC<PlayProps> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [isGamePaused, remainingTime, setRemainingTime]);
+  }, [isGamePaused, setRemainingTime]);
 
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {
@@ -328,37 +329,44 @@ const Play: React.FC<PlayProps> = ({
 
   // ジェムがクリックされたときの処理
   function handleGemClick(row: number, col: number): void {
-    if (selectedGem === null) {
-      setSelectedGem({ row, col });
-    } else {
-      // クリックされたジェムが選択されたジェムに隣接しているかを確認
-      const isAdjacent =
-        Math.abs(selectedGem.row - row) + Math.abs(selectedGem.col - col) === 1;
+    if (!isGamePaused) {
+      // ゲームが一時停止されていない場合のみ処理を実行
+      if (selectedGem === null) {
+        setSelectedGem({ row, col });
+      } else {
+        // クリックされたジェムが選択されたジェムに隣接しているかを確認
+        const isAdjacent =
+          Math.abs(selectedGem.row - row) + Math.abs(selectedGem.col - col) ===
+          1;
 
-      if (isAdjacent) {
-        const selectedGemValue =
-          grid[selectedGem.row][selectedGem.col].gemValue;
-        const clickedGemValue = grid[row][col].gemValue;
+        if (isAdjacent) {
+          const selectedGemValue =
+            grid[selectedGem.row][selectedGem.col].gemValue;
+          const clickedGemValue = grid[row][col].gemValue;
 
-        // 選択されたジェムとクリックされたジェムの値（gemValue）と位置を入れ替えてグリッドを更新
-        const updatedGrid = grid.map((gridRow, rowIndex) =>
-          gridRow.map((gem, colIndex) => {
-            if (rowIndex === selectedGem.row && colIndex === selectedGem.col) {
-              // クリックされたジェムの値（gemValue）と位置を選択されたジェムに設定
-              return { ...gem, gemValue: clickedGemValue };
-            } else if (rowIndex === row && colIndex === col) {
-              // 選択されたジェムの値（gemValue）と位置をクリックされたジェムに設定
-              return { ...gem, gemValue: selectedGemValue };
-            }
-            return gem;
-          })
-        );
+          // 選択されたジェムとクリックされたジェムの値（gemValue）と位置を入れ替えてグリッドを更新
+          const updatedGrid = grid.map((gridRow, rowIndex) =>
+            gridRow.map((gem, colIndex) => {
+              if (
+                rowIndex === selectedGem.row &&
+                colIndex === selectedGem.col
+              ) {
+                // クリックされたジェムの値（gemValue）と位置を選択されたジェムに設定
+                return { ...gem, gemValue: clickedGemValue };
+              } else if (rowIndex === row && colIndex === col) {
+                // 選択されたジェムの値（gemValue）と位置をクリックされたジェムに設定
+                return { ...gem, gemValue: selectedGemValue };
+              }
+              return gem;
+            })
+          );
 
-        // グリッドを更新した後、連続するジェムを消す処理を追加
-        removeMatchesAndCascade(updatedGrid);
+          // グリッドを更新した後、連続するジェムを消す処理を追加
+          removeMatchesAndCascade(updatedGrid);
+        }
+
+        setSelectedGem(null);
       }
-
-      setSelectedGem(null);
     }
   }
 
