@@ -1,2 +1,0 @@
-class GemSkinsController < ApplicationController
-end

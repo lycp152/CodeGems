@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :ranks
       resources :accounts
       resources :tips
+      resources :gemskins
       get '/github' =>  'github#index'
     end
   end
