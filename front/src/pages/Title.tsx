@@ -4,6 +4,10 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import { useAuth } from "../context/AuthContext";
 import LongButton from "../components/LongButton";
 import MainMenu from "../components/MainMenu";
+import { useEffect } from "react";
+import {auth, provider} from "../context/Firebase"
+import { signInWithPopup } from "firebase/auth";
+
 
 interface TitleProps {
   toggleHowToPlay: () => void;
@@ -21,7 +25,15 @@ const Title: React.FC<TitleProps> = ({
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
 
+  
+
   const handleLogin = () => {
+
+    signInWithPopup( auth, provider).then((result) => {
+      console.log(result);
+    }).catch((err) => {
+      console.log(err);
+    })
     setIsLoggedIn(true);
   };
 

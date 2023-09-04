@@ -17,6 +17,7 @@
     "assert": "^2.0.0",
     "browserify-zlib": "latest",
     "ethers": "^5",
+    "firebase": "^10.3.1",
     "http": "npm:http-browserify",
     "http-browserify": "latest",
     "https": "npm:https-browserify",
