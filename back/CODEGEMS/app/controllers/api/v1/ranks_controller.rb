@@ -41,7 +41,7 @@ module Api
         end
   
         def rank_params
-          params.require(:rank).permit(:name,:score)
+          params.require(:rank).permit(:score,:account_id)
         end
       end
     end
