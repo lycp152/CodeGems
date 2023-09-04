@@ -63,8 +63,21 @@ const Play: React.FC<PlayProps> = ({
     for (let row = 0; row < numRows; row++) {
       const newRow: Gem[] = [];
       for (let col = 0; col < numCols; col++) {
-        // 新しいジェムを生成
-        const gemValue = getRandomGemValue();
+        // 隣接するジェムの値を除外してランダムなジェムを生成
+        const excludedValues: number[] = [];
+        if (row >= 2) {
+          // 上方向に2つの行をチェック
+          excludedValues.push(
+            ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
+          );
+        }
+        if (col >= 2) {
+          // 左方向に2つの列をチェック
+          excludedValues.push(
+            ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
+          );
+        }
+        const gemValue = generateRandomGemValue(excludedValues);
         const backgroundColor = generateRandomBackgroundColor();
         newRow.push({ gemValue, backgroundColor });
       }
@@ -86,35 +99,6 @@ const Play: React.FC<PlayProps> = ({
 
   // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
   useEffect(() => {
-    // グリッドを初期化する関数
-    function initializeGrid(): Gem[][] {
-      const newGrid: Gem[][] = [];
-      for (let row = 0; row < numRows; row++) {
-        const newRow: Gem[] = [];
-        for (let col = 0; col < numCols; col++) {
-          // 隣接するジェムの値を除外してランダムなジェムを生成
-          const excludedValues: number[] = [];
-          if (row >= 2) {
-            // 上方向に2つの行をチェック
-            excludedValues.push(
-              ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
-            );
-          }
-          if (col >= 2) {
-            // 左方向に2つの列をチェック
-            excludedValues.push(
-              ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
-            );
-          }
-          const gemValue = generateRandomGemValue(excludedValues);
-          const backgroundColor = generateRandomBackgroundColor();
-          newRow.push({ gemValue, backgroundColor });
-        }
-        newGrid.push(newRow);
-      }
-      return newGrid;
-    }
-
     // コンポーネントが初回レンダリング時にのみ初期化
     if (!isGamePaused && grid.flat().every((gem) => gem.gemValue === -1)) {
       const newGrid = initializeGrid();
