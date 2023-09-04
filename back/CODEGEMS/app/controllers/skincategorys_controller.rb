@@ -1,0 +1,2 @@
+class SkincategorysController < ApplicationController
+end
