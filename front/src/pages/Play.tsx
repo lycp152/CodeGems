@@ -115,9 +115,12 @@ const Play: React.FC<PlayProps> = ({
       return newGrid;
     }
 
-    const newGrid = initializeGrid();
-    // グリッドを更新
-    setGrid(newGrid);
+    // コンポーネントが初回レンダリング時にのみ初期化
+    if (!isGamePaused && grid.flat().every((gem) => gem.gemValue === -1)) {
+      const newGrid = initializeGrid();
+      // グリッドを更新
+      setGrid(newGrid);
+    }
 
     // 1秒ごとにremainingTimeを減少させるタイマーを設定
     const timer = setInterval(() => {
@@ -133,7 +136,7 @@ const Play: React.FC<PlayProps> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [isGamePaused, setRemainingTime]);
+  }, [isGamePaused, setRemainingTime, grid]);
 
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {
