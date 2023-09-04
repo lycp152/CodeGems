@@ -8,7 +8,7 @@ interface LongButtonProps {
 
 export default function LongButton({ icon, label, onClick }: LongButtonProps) {
   return (
-    <button className="title-button" onClick={onClick}>
+    <button className="long-button" onClick={onClick}>
       <div className="button-content">
         {icon}
         {label}
