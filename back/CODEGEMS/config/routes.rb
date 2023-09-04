@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     namespace 'v1' do
       resources :ranks
       resources :accounts
+      resources :tips
       get '/github' =>  'github#index'
     end
   end
