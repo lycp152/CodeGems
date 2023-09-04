@@ -94,6 +94,7 @@ const Home: React.FC<HomeProps> = () => {
         <SideMenuButton
           toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
           toggleBackToTitle={() => setDetailView(DetailView.None)}
+          toggleBackToPlay={() => setDetailView(DetailView.None)}
           isDetailView={detailView !== DetailView.None}
           isPlaying={isPlaying}
         />
