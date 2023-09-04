@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       resources :accounts
       resources :tips
       resources :gemskins
+      resources :skincategorys
       get '/github' =>  'github#index'
     end
   end

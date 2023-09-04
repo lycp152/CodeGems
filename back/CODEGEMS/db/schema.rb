@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_04_135543) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_04_230423) do
   create_table "accounts", force: :cascade do |t|
     t.string "name"
     t.string "skin1"
@@ -34,6 +34,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_135543) do
   create_table "ranks", force: :cascade do |t|
     t.integer "score"
     t.string "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "skincategories", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
