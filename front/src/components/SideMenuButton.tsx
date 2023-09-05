@@ -10,6 +10,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import IconButton from "./IconButton";
 import "../styles/SideMenuButton.css";
+import { signOut, getAuth } from "firebase/auth";
 
 interface SideMenuButtonProps {
   toggleHowToPlay: () => void;
@@ -30,7 +31,14 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [hintCount, setHintCount] = useState<number>(4);
 
-  const handleLogout = () => setIsLoggedIn(false);
+  const handleLogout = async () => {
+    const auth = getAuth();
+    console.log(auth);
+    await signOut(auth).then((result) => {
+      setIsLoggedIn(false);
+      console.log(result);
+    });
+  };
   const handleSoundToggle = () => setIsSoundOn(!isSoundOn);
   const handleHintButtonClick = () =>
     hintCount > 0 && setHintCount((prevCount) => prevCount - 1);
