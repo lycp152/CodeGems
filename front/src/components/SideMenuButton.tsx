@@ -15,6 +15,7 @@ import { signOut, getAuth } from "firebase/auth";
 interface SideMenuButtonProps {
   toggleHowToPlay: () => void;
   toggleBackToTitle: () => void;
+  toggleBackToPlay: () => void;
   isDetailView: boolean;
   isPlaying: boolean;
 }
@@ -22,6 +23,7 @@ interface SideMenuButtonProps {
 const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   toggleHowToPlay,
   toggleBackToTitle,
+  toggleBackToPlay,
   isDetailView,
   isPlaying,
 }) => {
@@ -84,11 +86,20 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
         </>
       )}
       {isDetailView && (
-        <IconButton
-          onClick={toggleBackToTitle}
-          icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
-          label="backToTitle"
-        />
+        <>
+          <IconButton
+            onClick={toggleBackToTitle}
+            icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
+            label="backToTitle"
+          />
+          {isPlaying && (
+            <IconButton
+              onClick={toggleBackToPlay}
+              icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
+              label="backToPlay"
+            />
+          )}
+        </>
       )}
     </div>
   );

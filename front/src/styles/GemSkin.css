@@ -1,0 +1,13 @@
+.buttons-container {
+  display: flex;
+  flex-wrap: wrap; /* 画面の幅に収まるように折り返す */
+  justify-content: center; /* ボタンを中央に配置 */
+  gap: 10px; /* ボタン間の間隔 */
+}
+
+.selected-gem-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}

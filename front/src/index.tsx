@@ -7,7 +7,6 @@ import { Astar } from "@thirdweb-dev/chains";
 import "./styles/globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import { PlayProvider } from "./context/PlayContext";
-import { PauseProvider } from "./context/PauseContext";
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
@@ -21,9 +20,7 @@ root.render(
     <ThirdwebProvider activeChain={Astar}>
       <AuthProvider>
         <PlayProvider>
-          <PauseProvider>
-            <App />
-          </PauseProvider>
+          <App />
         </PlayProvider>
       </AuthProvider>
     </ThirdwebProvider>

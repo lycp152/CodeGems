@@ -6,7 +6,6 @@ import {
   ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 import IconButton from "./IconButton";
-//import { usePause } from "../context/PauseContext";
 
 interface PlayMenuProps {
   togglePause: () => void;

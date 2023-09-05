@@ -1,6 +1,6 @@
 import React from "react";
 import { ConnectWallet } from "@thirdweb-dev/react";
-// import "../styles/RewardNFT.css";
+import "../styles/RewardNFT.css";
 
 export default function RewardNFT() {
   return (
@@ -13,6 +13,7 @@ export default function RewardNFT() {
             align: "center",
           }}
         />
+        <div className="info">Coming soon…</div>
       </div>
       <div className="footer"></div>
     </main>
