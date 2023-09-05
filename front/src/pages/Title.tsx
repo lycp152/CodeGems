@@ -8,7 +8,6 @@ import { provider } from "../context/Firebase"
 import { signInWithPopup, getAuth } from "firebase/auth";
 import { FirebaseError } from '@firebase/util'
 
-
 interface TitleProps {
   toggleHowToPlay: () => void;
   toggleRewardNFT: () => void;
@@ -24,6 +23,8 @@ const Title: React.FC<TitleProps> = ({
   handlePlay,
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const github_client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
+  const github_oauth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&scope=user:read`;
 
   const handleLogin = async () => {
     const auth = getAuth();
@@ -46,6 +47,7 @@ const Title: React.FC<TitleProps> = ({
           label="Log in with GitHub"
           onClick={handleLogin}
         />
+
       );
     } else {
       return (
