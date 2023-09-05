@@ -1,17 +1,27 @@
 import React from "react";
-// import "../styles/Result.css";
+import "../styles/Result.css";
+import LongButton from "../components/LongButton";
+import RankingContainer from "../components/RankingContainer";
 
 interface ResultProps {
   score: number;
   handleBack: () => void;
+  handlePlay: () => void;
 }
 
-export default function Result({ score, handleBack }: ResultProps) {
+export default function Result({ score, handleBack, handlePlay }: ResultProps) {
   return (
     <div className="title-container">
-      <h1 className="title">Result</h1>
+      <h1 className="title">result</h1>
       <div className="main-container">
-        <p>Your Score: {score}</p>
+        <div className="score">score: {score}</div>
+        <RankingContainer />
+        <div className="result-button-container">
+          <div className="button-wrapper">
+            <LongButton label="Share" />
+            <LongButton label="Retry" onClick={handlePlay} />
+          </div>
+        </div>
       </div>
     </div>
   );

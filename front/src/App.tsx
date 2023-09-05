@@ -55,6 +55,7 @@ const Home: React.FC<HomeProps> = () => {
           <Result
             score={score}
             handleBack={() => handleDetailViewToggle(DetailView.None)}
+            handlePlay={() => handleDetailViewToggle(DetailView.None)}
           />
         );
       default:
@@ -68,6 +69,7 @@ const Home: React.FC<HomeProps> = () => {
               setRemainingTime={setRemainingTime}
               score={score}
               setScore={setScore}
+              toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
             />
           );
         } else {
@@ -95,6 +97,7 @@ const Home: React.FC<HomeProps> = () => {
         <SideMenuButton
           toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
           toggleBackToTitle={() => setDetailView(DetailView.None)}
+          toggleBackToPlay={() => setDetailView(DetailView.None)}
           isDetailView={detailView !== DetailView.None}
           isPlaying={isPlaying}
         />

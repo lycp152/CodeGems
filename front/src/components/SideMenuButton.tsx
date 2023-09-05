@@ -10,12 +10,12 @@ import {
 import { useAuth } from "../context/AuthContext";
 import IconButton from "./IconButton";
 import "../styles/SideMenuButton.css";
-
-import { signOut, getAuth } from "firebase/auth"
+import { signOut, getAuth } from "firebase/auth";
 
 interface SideMenuButtonProps {
   toggleHowToPlay: () => void;
   toggleBackToTitle: () => void;
+  toggleBackToPlay: () => void;
   isDetailView: boolean;
   isPlaying: boolean;
 }
@@ -23,6 +23,7 @@ interface SideMenuButtonProps {
 const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   toggleHowToPlay,
   toggleBackToTitle,
+  toggleBackToPlay,
   isDetailView,
   isPlaying,
 }) => {
@@ -31,14 +32,13 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   const [hintCount, setHintCount] = useState<number>(4);
 
   const handleLogout = async () => {
-      
-      const auth = getAuth();
-      console.log(auth);
-      await signOut(auth).then((result) => {
-        setIsLoggedIn(false);
-        console.log(result)
-      })
-    }
+    const auth = getAuth();
+    console.log(auth);
+    await signOut(auth).then((result) => {
+      setIsLoggedIn(false);
+      console.log(result);
+    });
+  };
   const handleSoundToggle = () => setIsSoundOn(!isSoundOn);
   const handleHintButtonClick = () =>
     hintCount > 0 && setHintCount((prevCount) => prevCount - 1);
@@ -86,11 +86,20 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
         </>
       )}
       {isDetailView && (
-        <IconButton
-          onClick={toggleBackToTitle}
-          icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
-          label="backToTitle"
-        />
+        <>
+          <IconButton
+            onClick={toggleBackToTitle}
+            icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
+            label="backToTitle"
+          />
+          {isPlaying && (
+            <IconButton
+              onClick={toggleBackToPlay}
+              icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
+              label="backToPlay"
+            />
+          )}
+        </>
       )}
     </div>
   );

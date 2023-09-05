@@ -3,6 +3,7 @@ import "../styles/Play.css";
 import GemGrid from "../components/GemGrid";
 import GameInfo from "../components/GameInfo";
 import PlayMenu from "../components/PlayMenu";
+import Paused from "../components/Paused";
 import {
   numRows,
   numCols,
@@ -10,7 +11,6 @@ import {
   gemBackgroundColors,
   MIN_MATCH_COUNT,
 } from "../components/constants";
-//import { usePause } from "../context/PauseContext";
 
 // ジェムの型を定義
 interface Gem {
@@ -40,6 +40,7 @@ interface PlayProps {
   setRemainingTime: React.Dispatch<React.SetStateAction<number>>; // 残り時間を設定する関数
   score: number; // 得点
   setScore: React.Dispatch<React.SetStateAction<number>>; // 得点を設定する関数
+  toggleBackToTitle: () => void;
 }
 
 // ゲームコンポーネント
@@ -48,6 +49,7 @@ const Play: React.FC<PlayProps> = ({
   setRemainingTime,
   score,
   setScore,
+  toggleBackToTitle,
 }) => {
   // グリッドと選択されたジェムの状態を管理するState
   const [grid, setGrid] = useState<Gem[][]>(() => initializeGrid()); // グリッドの状態
@@ -63,8 +65,21 @@ const Play: React.FC<PlayProps> = ({
     for (let row = 0; row < numRows; row++) {
       const newRow: Gem[] = [];
       for (let col = 0; col < numCols; col++) {
-        // 新しいジェムを生成
-        const gemValue = getRandomGemValue();
+        // 隣接するジェムの値を除外してランダムなジェムを生成
+        const excludedValues: number[] = [];
+        if (row >= 2) {
+          // 上方向に2つの行をチェック
+          excludedValues.push(
+            ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
+          );
+        }
+        if (col >= 2) {
+          // 左方向に2つの列をチェック
+          excludedValues.push(
+            ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
+          );
+        }
+        const gemValue = generateRandomGemValue(excludedValues);
         const backgroundColor = generateRandomBackgroundColor();
         newRow.push({ gemValue, backgroundColor });
       }
@@ -78,46 +93,14 @@ const Play: React.FC<PlayProps> = ({
     setIsGamePaused((prevIsGamePaused) => !prevIsGamePaused);
   };
 
-  // プレイメニューコンポーネントがホームに戻るボタンをクリックしたときの処理
-  const toggleBackToTitle = () => {
-    // ホーム画面に戻る処理を追加
-    // プレイ画面からホーム画面に戻るための処理を追加してください
-  };
-
   // コンポーネントの初回レンダリング時およびremainingTimeが変更されるたびに実行されるEffect
   useEffect(() => {
-    // グリッドを初期化する関数
-    function initializeGrid(): Gem[][] {
-      const newGrid: Gem[][] = [];
-      for (let row = 0; row < numRows; row++) {
-        const newRow: Gem[] = [];
-        for (let col = 0; col < numCols; col++) {
-          // 隣接するジェムの値を除外してランダムなジェムを生成
-          const excludedValues: number[] = [];
-          if (row >= 2) {
-            // 上方向に2つの行をチェック
-            excludedValues.push(
-              ...newGrid.slice(row - 2, row).map((r) => r[col].gemValue)
-            );
-          }
-          if (col >= 2) {
-            // 左方向に2つの列をチェック
-            excludedValues.push(
-              ...newRow.slice(col - 2, col).map((gem) => gem.gemValue)
-            );
-          }
-          const gemValue = generateRandomGemValue(excludedValues);
-          const backgroundColor = generateRandomBackgroundColor();
-          newRow.push({ gemValue, backgroundColor });
-        }
-        newGrid.push(newRow);
-      }
-      return newGrid;
+    // コンポーネントが初回レンダリング時にのみ初期化
+    if (!isGamePaused && grid.flat().every((gem) => gem.gemValue === -1)) {
+      const newGrid = initializeGrid();
+      // グリッドを更新
+      setGrid(newGrid);
     }
-
-    const newGrid = initializeGrid();
-    // グリッドを更新
-    setGrid(newGrid);
 
     // 1秒ごとにremainingTimeを減少させるタイマーを設定
     const timer = setInterval(() => {
@@ -133,7 +116,7 @@ const Play: React.FC<PlayProps> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [isGamePaused, setRemainingTime]);
+  }, [isGamePaused, setRemainingTime, grid]);
 
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {
@@ -392,12 +375,18 @@ const Play: React.FC<PlayProps> = ({
     <div className="play-container">
       {/* ゲーム情報コンポーネント */}
       <GameInfo score={score} remainingTime={remainingTime} />
-      {/* ジェムグリッドコンポーネント */}
-      <GemGrid
-        grid={grid}
-        selectedGem={selectedGem}
-        onGemClick={(row, col) => handleGemClick(row, col)}
-      />
+      {isGamePaused ? (
+        // isGamePausedがtrueの場合、Pausedを表示
+        <Paused />
+      ) : (
+        // isGamePausedがfalseの場合、通常のGemGridを表示
+        /* ジェムグリッドコンポーネント */
+        <GemGrid
+          grid={grid}
+          selectedGem={selectedGem}
+          onGemClick={(row, col) => handleGemClick(row, col)}
+        />
+      )}
       {/* プレイメニューコンポーネント */}
       <PlayMenu
         togglePause={togglePause}
