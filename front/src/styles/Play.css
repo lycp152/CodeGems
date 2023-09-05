@@ -1,0 +1,133 @@
+/* Game Info セクション */
+.game-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  width: 470px;
+}
+
+.score-time-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.score,
+.remaining-time {
+  font-size: 35px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+}
+
+/* タイムバー */
+.time-bar {
+  width: 470px;
+  height: 25px;
+  background-color: #ddd;
+  position: relative;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.time-remaining {
+  height: 100%;
+  background-color: #34ce42;
+  border-radius: 5px 0 0 5px;
+  width: 100%;
+}
+
+/* プレイコンテナ */
+.play-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* グリッドコンテナ */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(${numCols}, 50px);
+  gap: 14px;
+}
+
+.grid-row {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* ジェム */
+.gem {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out; /* アニメーションのプロパティを設定 */
+}
+
+/* ジェムの背景 */
+.gem-background {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* ジェムの種類ごとの色 */
+.gem-0 {
+  background-color: red;
+}
+.gem-1 {
+  background-color: blue;
+}
+.gem-2 {
+  background-color: green;
+}
+.gem-3 {
+  background-color: yellow;
+}
+.gem-4 {
+  background-color: orange;
+}
+.gem-5 {
+  background-color: purple;
+}
+
+/* ジェムカーソル */
+.gem-cursor {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 5px solid white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 点滅アニメーション */
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.blinking {
+  animation: blink 1s infinite; /* 点滅アニメーションを1秒ごとに無限に繰り返す */
+}

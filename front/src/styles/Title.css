@@ -1,0 +1,53 @@
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  font-size: 5rem;
+  margin-block-start: 0.3em;
+  margin-block-end: 0.1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.button-container {
+  bottom: 60px;
+  position: absolute;
+}
+
+.title-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  width: 300px;
+  height: 45px;
+  margin-bottom: 60px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.title-button:hover {
+  background-color: #ddd;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+}
+
+.main-menu {
+  display: flex;
+  margin-bottom: 50px;
+  gap: 40px;
+}
