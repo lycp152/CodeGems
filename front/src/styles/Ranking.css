@@ -1,0 +1,37 @@
+.ranking-container {
+  h2 {
+    padding: 0;
+  }
+  .score {
+    font-size: 50px;
+    margin: 0;
+  }
+}
+
+ol {
+  list-style: decimal;
+}
+
+li {
+  font-size: 30px;
+  margin-top: 5px;
+}
+
+.rankings {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* 上揃えにする場合は flex-start を使用 */
+  flex-wrap: wrap; /* ラップするために必要 */
+}
+
+.top10,
+.top11-20 {
+  flex-basis: 50%;
+  text-align: center;
+}
+
+.button-wrapper {
+  display: flex;
+  gap: 10px; /* ボタン間の間隔を設定 */
+  justify-content: center; /* ボタンを中央に配置 */
+}

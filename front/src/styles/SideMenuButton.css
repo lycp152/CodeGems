@@ -1,0 +1,57 @@
+.side-buttons {
+  gap: 20px;
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.icon-button {
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Jockey One", sans-serif;
+  font-size: 21px;
+  .button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.icon svg {
+  display: inline-block; /* アイコンをインライン要素として扱う */
+  vertical-align: middle; /* 垂直方向に中央寄せ */
+}
+
+.text {
+  margin: 0;
+  line-height: 0.8;
+}
+
+.icon-button:hover {
+  color: #ddd;
+}
+
+.hint-count {
+  color: #000;
+  font-size: 34px;
+  position: absolute;
+  top: 9%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Inter", sans-serif;
+  font-weight: bold;
+}
+
+.play-menu {
+  gap: 20px;
+  position: absolute;
+  bottom: 60px;
+  right: 155px;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,36 @@
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  margin-block-start: 0.3em;
+  margin-block-end: 0.1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.button-container {
+  bottom: 60px;
+  position: absolute;
+  .long-button {
+    margin-bottom: 60px;
+  }
+}
+
+.long-button:hover {
+  background-color: #ddd;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+}
+
+.main-menu {
+  display: flex;
+  margin-bottom: 50px;
+  gap: 40px;
+}
