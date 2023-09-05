@@ -3,7 +3,7 @@ class CreateGemSkins < ActiveRecord::Migration[7.0]
     create_table :gem_skins do |t|
       t.string :name
       t.string :imageUrl
-      t.string :categoryId
+      t.integer :categoryId
 
       t.timestamps
     end
