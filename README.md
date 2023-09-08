@@ -27,11 +27,11 @@
 ## 開発環境
 
 ### フロントエンド
-言語：TypeScript
+言語：TypeScript<br>
 フレームワーク：React
 
 ### バックエンド
-言語：Ruby
+言語：Ruby<br>
 フレームワーク：Ruby on Rails
 
 ## システム構成図
