@@ -1,0 +1,24 @@
+.howtoplay-image {
+  max-width: 45%; /* 画像の最大幅を親要素に合わせる */
+  height: auto; /* 高さを自動計算して縦横比を維持 */
+}
+
+.odds-image {
+  max-width: 30%; /* 画像の最大幅を親要素に合わせる */
+  height: auto; /* 高さを自動計算して縦横比を維持 */
+}
+
+.image-container {
+  display: flex;
+  flex-direction: column; /* 画像を縦に配置 */
+  align-items: center; /* 中央寄せ */
+}
+
+.image-with-description {
+  text-align: center; /* 説明文を中央寄せ */
+  margin: 10px 0; /* 画像と説明文の間に余白を設定 */
+}
+
+.image-description {
+  font-size: 16px; /* 説明文のフォントサイズを設定 */
+}
