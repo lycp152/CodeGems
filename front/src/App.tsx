@@ -25,6 +25,7 @@ const Home: React.FC<HomeProps> = () => {
   const [detailView, setDetailView] = useState(DetailView.None);
   const [remainingTime, setRemainingTime] = useState<number>(120);
   const [score, setScore] = useState<number>(0);
+  const [hintCount, setHintCount] = useState<number>(4);
 
   const handleDetailViewToggle = (view: DetailView) => {
     setDetailView(view);
@@ -35,6 +36,7 @@ const Home: React.FC<HomeProps> = () => {
     setDetailView(DetailView.None);
     setScore(0);
     setRemainingTime(120);
+    setHintCount(4); // プレイ再開時にhintCountをリセット
   };
 
   // タイマーがゼロになったときに呼び出す関数
@@ -98,9 +100,12 @@ const Home: React.FC<HomeProps> = () => {
           toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
           toggleBackToPlay={() => {
             setDetailView(DetailView.None);
+            setHintCount(4); // プレイ再開時にhintCountをリセット
           }}
           isDetailView={detailView !== DetailView.None}
           isPlaying={isPlaying}
+          hintCount={hintCount} // hintCountを渡す
+          setHintCount={setHintCount} // setHintCountを渡す
         />
       </div>
       <footer>

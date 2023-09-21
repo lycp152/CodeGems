@@ -18,6 +18,8 @@ interface SideMenuButtonProps {
   toggleBackToPlay: () => void;
   isDetailView: boolean;
   isPlaying: boolean;
+  hintCount: number;
+  setHintCount: React.Dispatch<React.SetStateAction<number>>; // 追加
 }
 
 const SideMenuButton: React.FC<SideMenuButtonProps> = ({
@@ -26,10 +28,11 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   toggleBackToPlay,
   isDetailView,
   isPlaying,
+  hintCount,
+  setHintCount, // 追加
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [isSoundOn, setIsSoundOn] = useState(true);
-  const [hintCount, setHintCount] = useState<number>(4);
 
   const handleLogout = async () => {
     const auth = getAuth();
