@@ -27,14 +27,17 @@ const Home: React.FC<HomeProps> = () => {
   const [score, setScore] = useState<number>(0);
 
   const handleDetailViewToggle = (view: DetailView) => {
+    // if (isPlaying) {
+    //   setIsPlaying(false);
+    // }
     setDetailView(view);
   };
 
   const handlePlay = () => {
     setIsPlaying(true);
     setDetailView(DetailView.None);
-    setScore(0); // Reset the score when starting a new play
-    setRemainingTime(120); // Reset the remaining time when starting a new play
+    setScore(0);
+    setRemainingTime(120);
   };
 
   const renderDetailView = () => {
@@ -54,7 +57,10 @@ const Home: React.FC<HomeProps> = () => {
           setRemainingTime={setRemainingTime}
           score={score}
           setScore={setScore}
-          toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
+          toggleBackToTitle={() => {
+            setIsPlaying(false);
+            handleDetailViewToggle(DetailView.None);
+          }}
         />
       );
     } else {
@@ -91,8 +97,10 @@ const Home: React.FC<HomeProps> = () => {
         {renderDetailView()}
         <SideMenuButton
           toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
-          toggleBackToTitle={() => setDetailView(DetailView.None)}
-          toggleBackToPlay={() => setDetailView(DetailView.None)}
+          toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
+          toggleBackToPlay={() => {
+            setDetailView(DetailView.None);
+          }}
           isDetailView={detailView !== DetailView.None}
           isPlaying={isPlaying}
         />
