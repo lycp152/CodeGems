@@ -41,6 +41,7 @@ interface PlayProps {
   score: number; // 得点
   setScore: React.Dispatch<React.SetStateAction<number>>; // 得点を設定する関数
   toggleBackToTitle: () => void;
+  handleTimeUp: () => void;
 }
 
 // ゲームコンポーネント
@@ -50,6 +51,7 @@ const Play: React.FC<PlayProps> = ({
   score,
   setScore,
   toggleBackToTitle,
+  handleTimeUp,
 }) => {
   // グリッドと選択されたジェムの状態を管理するState
   const [isPlaying, setIsPlaying] = useState(false);
@@ -113,11 +115,15 @@ const Play: React.FC<PlayProps> = ({
       }
     }, 1000);
 
+    if (remainingTime === 0) {
+      handleTimeUp(); // タイマーがゼロになったら handleTimeUp を呼び出す
+    }
+
     // コンポーネントのアンマウント時にタイマーをクリア
     return () => {
       clearInterval(timer);
     };
-  }, [isGamePaused, setRemainingTime, grid]);
+  }, [isGamePaused, setRemainingTime, grid, remainingTime, handleTimeUp]);
 
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {

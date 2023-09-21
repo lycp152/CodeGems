@@ -25,11 +25,9 @@ const Home: React.FC<HomeProps> = () => {
   const [detailView, setDetailView] = useState(DetailView.None);
   const [remainingTime, setRemainingTime] = useState<number>(120);
   const [score, setScore] = useState<number>(0);
+  const [isResultView, setIsResultView] = useState(false); // 追加
 
   const handleDetailViewToggle = (view: DetailView) => {
-    // if (isPlaying) {
-    //   setIsPlaying(false);
-    // }
     setDetailView(view);
   };
 
@@ -38,10 +36,28 @@ const Home: React.FC<HomeProps> = () => {
     setDetailView(DetailView.None);
     setScore(0);
     setRemainingTime(120);
+    setIsResultView(false); // プレイが再開されたら Result ビューを非表示にする
+  };
+
+  // タイマーがゼロになったときに呼び出す関数
+  const handleTimeUp = () => {
+    setIsPlaying(false);
+    setIsResultView(true); // Result ビューを表示
   };
 
   const renderDetailView = () => {
-    if (detailView === DetailView.HowToPlay) {
+    if (isResultView) {
+      return (
+        <Result
+          score={score}
+          handleBack={() => {
+            setIsResultView(false); // Result ビューを非表示にする
+            handleDetailViewToggle(DetailView.None);
+          }}
+          handlePlay={() => handleDetailViewToggle(DetailView.None)}
+        />
+      );
+    } else if (detailView === DetailView.HowToPlay) {
       return <HowToPlay />;
     } else if (detailView === DetailView.RewardNFT) {
       return <RewardNFT />;
@@ -51,15 +67,6 @@ const Home: React.FC<HomeProps> = () => {
       return <Ranking />;
     } else if (detailView === DetailView.None) {
       if (isPlaying) {
-        if (remainingTime <= 0) {
-          return (
-            <Result
-              score={score}
-              handleBack={() => handleDetailViewToggle(DetailView.None)}
-              handlePlay={() => handleDetailViewToggle(DetailView.None)}
-            />
-          );
-        }
         return (
           <Play
             remainingTime={remainingTime}
@@ -70,6 +77,7 @@ const Home: React.FC<HomeProps> = () => {
               setIsPlaying(false);
               handleDetailViewToggle(DetailView.None);
             }}
+            handleTimeUp={handleTimeUp} // タイマーがゼロになったら呼び出す
           />
         );
       } else {
