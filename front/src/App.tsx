@@ -100,7 +100,6 @@ const Home: React.FC<HomeProps> = () => {
           toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
           toggleBackToPlay={() => {
             setDetailView(DetailView.None);
-            setHintCount(4); // プレイ再開時にhintCountをリセット
           }}
           isDetailView={detailView !== DetailView.None}
           isPlaying={isPlaying}
