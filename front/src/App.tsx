@@ -41,52 +41,47 @@ const Home: React.FC<HomeProps> = () => {
   };
 
   const renderDetailView = () => {
-    if (isPlaying) {
-      if (remainingTime <= 0) {
-        return (
-          <Result
-            score={score}
-            handleBack={() => handleDetailViewToggle(DetailView.None)}
-            handlePlay={() => handleDetailViewToggle(DetailView.None)}
-          />
-        );
-      }
-      return (
-        <Play
-          remainingTime={remainingTime}
-          setRemainingTime={setRemainingTime}
-          score={score}
-          setScore={setScore}
-          toggleBackToTitle={() => {
-            setIsPlaying(false);
-            handleDetailViewToggle(DetailView.None);
-          }}
-        />
-      );
-    } else {
-      switch (detailView) {
-        case DetailView.HowToPlay:
-          return <HowToPlay />;
-        case DetailView.RewardNFT:
-          return <RewardNFT />;
-        case DetailView.GemSkin:
-          return <GemSkin />;
-        case DetailView.Ranking:
-          return <Ranking />;
-        default:
+    if (detailView === DetailView.HowToPlay) {
+      return <HowToPlay />;
+    } else if (detailView === DetailView.RewardNFT) {
+      return <RewardNFT />;
+    } else if (detailView === DetailView.GemSkin) {
+      return <GemSkin />;
+    } else if (detailView === DetailView.Ranking) {
+      return <Ranking />;
+    } else if (detailView === DetailView.None) {
+      if (isPlaying) {
+        if (remainingTime <= 0) {
           return (
-            <Title
-              toggleHowToPlay={() =>
-                handleDetailViewToggle(DetailView.HowToPlay)
-              }
-              toggleRewardNFT={() =>
-                handleDetailViewToggle(DetailView.RewardNFT)
-              }
-              toggleGemSkin={() => handleDetailViewToggle(DetailView.GemSkin)}
-              toggleRanking={() => handleDetailViewToggle(DetailView.Ranking)}
-              handlePlay={handlePlay}
+            <Result
+              score={score}
+              handleBack={() => handleDetailViewToggle(DetailView.None)}
+              handlePlay={() => handleDetailViewToggle(DetailView.None)}
             />
           );
+        }
+        return (
+          <Play
+            remainingTime={remainingTime}
+            setRemainingTime={setRemainingTime}
+            score={score}
+            setScore={setScore}
+            toggleBackToTitle={() => {
+              setIsPlaying(false);
+              handleDetailViewToggle(DetailView.None);
+            }}
+          />
+        );
+      } else {
+        return (
+          <Title
+            toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
+            toggleRewardNFT={() => handleDetailViewToggle(DetailView.RewardNFT)}
+            toggleGemSkin={() => handleDetailViewToggle(DetailView.GemSkin)}
+            toggleRanking={() => handleDetailViewToggle(DetailView.Ranking)}
+            handlePlay={handlePlay}
+          />
+        );
       }
     }
   };
