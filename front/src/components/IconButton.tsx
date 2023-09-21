@@ -1,14 +1,18 @@
 import React from "react";
 
-interface IconButtonProps {
+interface IconTextButtonProps {
   icon: React.ReactElement;
   label: string;
   onClick?: () => void;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ icon, label, onClick }) => {
+const IconTextButton: React.FC<IconTextButtonProps> = ({
+  icon,
+  label,
+  onClick,
+}) => {
   return (
-    <button className="icon-button" onClick={onClick}>
+    <button className="icon-button" onClick={onClick} aria-label={label}>
       <div className="button-content">
         <div className="icon">{icon}</div>
         <div className="text">{label}</div>
@@ -17,4 +21,4 @@ const IconButton: React.FC<IconButtonProps> = ({ icon, label, onClick }) => {
   );
 };
 
-export default IconButton;
+export default IconTextButton;

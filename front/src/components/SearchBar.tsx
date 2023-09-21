@@ -15,7 +15,7 @@ const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) => {
   };
 
   return (
-    <form className="search-c" onSubmit={handleSubmit}>
+    <form className="search-container" onSubmit={handleSubmit}>
       <div className="search-input">
         <SearchIcon className="search-icon" />
         <input

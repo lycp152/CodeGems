@@ -28,8 +28,10 @@ export const PlayProvider: React.FC<PlayProviderProps> = ({ children }) => {
 
 export const usePlay = (): PlayContextProps => {
   const context = useContext(PlayContext);
+
   if (!context) {
     throw new Error("usePlay must be used within a PlayProvider");
   }
+
   return context;
 };

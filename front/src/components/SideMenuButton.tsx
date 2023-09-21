@@ -33,15 +33,18 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
 
   const handleLogout = async () => {
     const auth = getAuth();
-    console.log(auth);
-    await signOut(auth).then((result) => {
+    await signOut(auth).then(() => {
       setIsLoggedIn(false);
-      console.log(result);
     });
   };
+
   const handleSoundToggle = () => setIsSoundOn(!isSoundOn);
-  const handleHintButtonClick = () =>
-    hintCount > 0 && setHintCount((prevCount) => prevCount - 1);
+
+  const handleHintButtonClick = () => {
+    if (hintCount > 0) {
+      setHintCount((prevCount) => prevCount - 1);
+    }
+  };
 
   return (
     <div className="side-buttons">
@@ -86,23 +89,12 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
         </>
       )}
       {isDetailView && (
-        <>
-          {isPlaying ? (
-            // プレイ中の場合、backToPlay ボタンを表示
-            <IconButton
-              onClick={toggleBackToPlay}
-              icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
-              label="backToPlay"
-            />
-          ) : (
-            // プレイ中でない場合、backToTitle ボタンを表示
-            <IconButton
-              onClick={toggleBackToTitle}
-              icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
-              label="backToTitle"
-            />
-          )}
-        </>
+        // プレイ中の場合、backToPlay ボタンを表示/プレイ中でない場合、backToTitle ボタンを表示
+        <IconButton
+          onClick={isPlaying ? toggleBackToPlay : toggleBackToTitle}
+          icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
+          label={isPlaying ? "backToPlay" : "backToTitle"}
+        />
       )}
     </div>
   );

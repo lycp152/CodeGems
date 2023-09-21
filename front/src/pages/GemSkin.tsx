@@ -1,43 +1,61 @@
 import React from "react";
-import LongButton from "../components/LongButton";
 import "../styles/GemSkin.css";
 import SearchBar from "../components/SearchBar";
 import NumberedImage from "../components/NumberedImage";
+import LongButton from "../components/LongButton";
+
+const gemData = [
+  { number: 1, imageSrc: "image1.jpg", label: "gem 1" },
+  { number: 2, imageSrc: "image2.jpg", label: "gem 2" },
+  { number: 3, imageSrc: "image3.jpg", label: "gem 3" },
+  { number: 4, imageSrc: "image4.jpg", label: "gem 4" },
+  { number: 5, imageSrc: "image5.jpg", label: "gem 5" },
+  { number: 6, imageSrc: "image6.jpg", label: "gem 6" },
+];
+
+const buttonLabels = [
+  "Programming Languages",
+  "Frontend Development",
+  "Backend Development",
+  "Mobile App Development",
+  "AI/ML",
+  "Database",
+  "Data Visualization",
+  "Devops",
+  "Backend as a Service(BaaS)",
+  "Framework",
+  "Testing",
+  "Software",
+  "Static Site Generators",
+  "Game Engines",
+  "Other",
+];
 
 export default function GemSkin() {
   const handleSearch = (query: string) => {
     // 検索処理を実行
     console.log("検索クエリ:", query);
   };
+
   return (
-    <div className="title-container">
-      <h1 className="title">gemSkin</h1>
-      <div className="main-container">
+    <div className="gem-skin-container">
+      <h1 className="title">Gem Skin</h1>
+      <div className="gem-skin-content">
         <div className="selected-gem-container">
-          <NumberedImage number={1} imageSrc="image1.jpg" label="gem 1" />
-          <NumberedImage number={2} imageSrc="image2.jpg" label="gem 2" />
-          <NumberedImage number={3} imageSrc="image3.jpg" label="gem 3" />
-          <NumberedImage number={4} imageSrc="image4.jpg" label="gem 4" />
-          <NumberedImage number={5} imageSrc="image5.jpg" label="gem 5" />
-          <NumberedImage number={6} imageSrc="image6.jpg" label="gem 6" />
+          {gemData.map((gem) => (
+            <NumberedImage
+              key={gem.number}
+              number={gem.number}
+              imageSrc={gem.imageSrc}
+              label={gem.label}
+            />
+          ))}
         </div>
         <SearchBar onSearch={handleSearch} />
         <div className="buttons-container">
-          <LongButton label="Programming Languages" />
-          <LongButton label="Frontend Development" />
-          <LongButton label="Backend Development" />
-          <LongButton label="Mobile App Development" />
-          <LongButton label="AI/ML" />
-          <LongButton label="Database" />
-          <LongButton label="Data Visualization" />
-          <LongButton label="Devops" />
-          <LongButton label="Backend as a Service(BaaS)" />
-          <LongButton label="Framework" />
-          <LongButton label="Testing" />
-          <LongButton label="Software" />
-          <LongButton label="Static Site Generators" />
-          <LongButton label="Game Engines" />
-          <LongButton label="Other" />
+          {buttonLabels.map((label) => (
+            <LongButton key={label} label={label} />
+          ))}
         </div>
       </div>
     </div>

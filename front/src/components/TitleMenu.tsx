@@ -1,18 +1,18 @@
 import React from "react";
-import IconButton from "../components/IconButton";
+import IconButton from "./IconButton";
 import {
   MilitaryTech as MilitaryTechIcon,
   Diamond,
   EmojiEvents,
 } from "@mui/icons-material";
 
-interface MainMenuProps {
+interface TitleMenuProps {
   toggleRewardNFT: () => void;
   toggleGemSkin: () => void;
   toggleRanking: () => void;
 }
 
-const MainMenu: React.FC<MainMenuProps> = ({
+const TitleMenu: React.FC<TitleMenuProps> = ({
   toggleRewardNFT,
   toggleGemSkin,
   toggleRanking,
@@ -43,4 +43,4 @@ const MainMenu: React.FC<MainMenuProps> = ({
   );
 };
 
-export default MainMenu;
+export default TitleMenu;

@@ -11,12 +11,12 @@ interface ResultProps {
 
 export default function Result({ score, handleBack, handlePlay }: ResultProps) {
   return (
-    <div className="title-container">
-      <h1 className="title">result</h1>
-      <div className="main-container">
-        <div className="score">score: {score}</div>
+    <div className="result-container">
+      <h1 className="title">Result</h1>
+      <div className="result-content">
+        <div className="score">Score: {score}</div>
         <RankingContainer />
-        <div className="result-button-container">
+        <div className="result-buttons">
           <div className="button-wrapper">
             <LongButton label="Share" />
             <LongButton label="Retry" onClick={handlePlay} />

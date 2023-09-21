@@ -22,10 +22,9 @@ const PlayMenu: React.FC<PlayMenuProps> = ({
   isPlaying,
   setIsPlaying,
 }) => {
-  // backToTitle ボタンが押された際の処理
   const handleBackToTitle = () => {
-    setIsPlaying(false); // isPlaying を false に設定
-    toggleBackToTitle(); // 親コンポーネントに通知
+    setIsPlaying(false);
+    toggleBackToTitle();
   };
 
   return (
@@ -42,7 +41,7 @@ const PlayMenu: React.FC<PlayMenuProps> = ({
         label={isGamePaused ? "play" : "pause"}
       />
       <IconButton
-        onClick={handleBackToTitle} // backToTitle ボタンが押された際に handleBackToTitle を呼び出す
+        onClick={handleBackToTitle}
         icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
         label="backToTitle"
       />

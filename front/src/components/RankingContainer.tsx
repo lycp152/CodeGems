@@ -47,30 +47,28 @@ function RankingContainer() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <>
-          <div className="rankings">
-            <div className="top10">
-              <ol>
-                {top10.map((entry, index) => (
+        <div className="rankings">
+          <div className="top10">
+            <ol>
+              {top10.map((entry, index) => (
+                <li key={index}>
+                  {entry.username}: {entry.score}
+                </li>
+              ))}
+            </ol>
+          </div>
+          {restOfTheRankings.length > 0 && (
+            <div className="top11-20">
+              <ol start={11}>
+                {restOfTheRankings.map((entry, index) => (
                   <li key={index}>
                     {entry.username}: {entry.score}
                   </li>
                 ))}
               </ol>
             </div>
-            {restOfTheRankings.length > 0 && (
-              <div className="top11-20">
-                <ol start={11}>
-                  {restOfTheRankings.map((entry, index) => (
-                    <li key={index}>
-                      {entry.username}: {entry.score}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
-          </div>
-        </>
+          )}
+        </div>
       )}
     </div>
   );

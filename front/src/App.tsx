@@ -25,8 +25,6 @@ const Home: React.FC<HomeProps> = () => {
   const [detailView, setDetailView] = useState(DetailView.None);
   const [remainingTime, setRemainingTime] = useState<number>(120);
   const [score, setScore] = useState<number>(0);
-  const github_client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
-  const github_oauth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&scope=user:read`;
 
   const handleDetailViewToggle = (view: DetailView) => {
     setDetailView(view);
@@ -40,16 +38,8 @@ const Home: React.FC<HomeProps> = () => {
   };
 
   const renderDetailView = () => {
-    switch (detailView) {
-      case DetailView.HowToPlay:
-        return <HowToPlay />;
-      case DetailView.RewardNFT:
-        return <RewardNFT />;
-      case DetailView.GemSkin:
-        return <GemSkin />;
-      case DetailView.Ranking:
-        return <Ranking />;
-      case DetailView.Result:
+    if (isPlaying) {
+      if (remainingTime <= 0) {
         return (
           <Result
             score={score}
@@ -57,21 +47,27 @@ const Home: React.FC<HomeProps> = () => {
             handlePlay={() => handleDetailViewToggle(DetailView.None)}
           />
         );
-      default:
-        if (isPlaying) {
-          if (remainingTime <= 0) {
-            handleDetailViewToggle(DetailView.Result);
-          }
-          return (
-            <Play
-              remainingTime={remainingTime}
-              setRemainingTime={setRemainingTime}
-              score={score}
-              setScore={setScore}
-              toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
-            />
-          );
-        } else {
+      }
+      return (
+        <Play
+          remainingTime={remainingTime}
+          setRemainingTime={setRemainingTime}
+          score={score}
+          setScore={setScore}
+          toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
+        />
+      );
+    } else {
+      switch (detailView) {
+        case DetailView.HowToPlay:
+          return <HowToPlay />;
+        case DetailView.RewardNFT:
+          return <RewardNFT />;
+        case DetailView.GemSkin:
+          return <GemSkin />;
+        case DetailView.Ranking:
+          return <Ranking />;
+        default:
           return (
             <Title
               toggleHowToPlay={() =>
@@ -85,7 +81,7 @@ const Home: React.FC<HomeProps> = () => {
               handlePlay={handlePlay}
             />
           );
-        }
+      }
     }
   };
 
