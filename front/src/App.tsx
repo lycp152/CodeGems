@@ -29,7 +29,6 @@ const Home: React.FC<HomeProps> = () => {
   const github_oauth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&scope=user:read`;
 
   const handleDetailViewToggle = (view: DetailView) => {
-    setIsPlaying(false);
     setDetailView(view);
   };
 

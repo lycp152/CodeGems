@@ -87,16 +87,19 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
       )}
       {isDetailView && (
         <>
-          <IconButton
-            onClick={toggleBackToTitle}
-            icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
-            label="backToTitle"
-          />
-          {isPlaying && (
+          {isPlaying ? (
+            // プレイ中の場合、backToPlay ボタンを表示
             <IconButton
               onClick={toggleBackToPlay}
               icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
               label="backToPlay"
+            />
+          ) : (
+            // プレイ中でない場合、backToTitle ボタンを表示
+            <IconButton
+              onClick={toggleBackToTitle}
+              icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
+              label="backToTitle"
             />
           )}
         </>

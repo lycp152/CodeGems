@@ -52,6 +52,7 @@ const Play: React.FC<PlayProps> = ({
   toggleBackToTitle,
 }) => {
   // グリッドと選択されたジェムの状態を管理するState
+  const [isPlaying, setIsPlaying] = useState(false);
   const [grid, setGrid] = useState<Gem[][]>(() => initializeGrid()); // グリッドの状態
   const [selectedGem, setSelectedGem] = useState<{
     row: number;
@@ -392,6 +393,8 @@ const Play: React.FC<PlayProps> = ({
         togglePause={togglePause}
         toggleBackToTitle={toggleBackToTitle}
         isGamePaused={isGamePaused}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
       />
     </div>
   );
