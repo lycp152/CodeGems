@@ -5,11 +5,10 @@ import RankingContainer from "../components/RankingContainer";
 
 interface ResultProps {
   score: number;
-  handleBack: () => void;
   handlePlay: () => void;
 }
 
-export default function Result({ score, handleBack, handlePlay }: ResultProps) {
+export default function Result({ score, handlePlay }: ResultProps) {
   return (
     <div className="result-container">
       <h1 className="title">Result</h1>

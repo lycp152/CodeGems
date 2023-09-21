@@ -10,17 +10,20 @@ interface TitleMenuProps {
   toggleRewardNFT: () => void;
   toggleGemSkin: () => void;
   toggleRanking: () => void;
+  toggleResult: () => void;
 }
 
 const TitleMenu: React.FC<TitleMenuProps> = ({
   toggleRewardNFT,
   toggleGemSkin,
   toggleRanking,
+  toggleResult,
 }) => {
   const handleMenuItemClick = (label: string) => {
     if (label === "rewardNFT") toggleRewardNFT();
     else if (label === "gemSkin") toggleGemSkin();
     else if (label === "ranking") toggleRanking();
+    else if (label === "result") toggleResult();
   };
 
   const menuItems = [

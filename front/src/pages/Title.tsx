@@ -13,6 +13,7 @@ interface TitleProps {
   toggleRewardNFT: () => void;
   toggleGemSkin: () => void;
   toggleRanking: () => void;
+  toggleResult: () => void;
   handlePlay: () => void;
 }
 
@@ -20,6 +21,7 @@ const Title: React.FC<TitleProps> = ({
   toggleRewardNFT,
   toggleGemSkin,
   toggleRanking,
+  toggleResult,
   handlePlay,
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -56,6 +58,7 @@ const Title: React.FC<TitleProps> = ({
             toggleRewardNFT={toggleRewardNFT}
             toggleGemSkin={toggleGemSkin}
             toggleRanking={toggleRanking}
+            toggleResult={toggleResult}
           />
           <LongButton label="Play" onClick={handlePlay} />
         </>

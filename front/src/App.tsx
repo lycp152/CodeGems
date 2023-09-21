@@ -25,7 +25,6 @@ const Home: React.FC<HomeProps> = () => {
   const [detailView, setDetailView] = useState(DetailView.None);
   const [remainingTime, setRemainingTime] = useState<number>(120);
   const [score, setScore] = useState<number>(0);
-  const [isResultView, setIsResultView] = useState(false); // 追加
 
   const handleDetailViewToggle = (view: DetailView) => {
     setDetailView(view);
@@ -36,24 +35,19 @@ const Home: React.FC<HomeProps> = () => {
     setDetailView(DetailView.None);
     setScore(0);
     setRemainingTime(120);
-    setIsResultView(false); // プレイが再開されたら Result ビューを非表示にする
   };
 
   // タイマーがゼロになったときに呼び出す関数
   const handleTimeUp = () => {
     setIsPlaying(false);
-    setIsResultView(true); // Result ビューを表示
+    setDetailView(DetailView.Result);
   };
 
   const renderDetailView = () => {
-    if (isResultView) {
+    if (detailView === DetailView.Result) {
       return (
         <Result
           score={score}
-          handleBack={() => {
-            setIsResultView(false); // Result ビューを非表示にする
-            handleDetailViewToggle(DetailView.None);
-          }}
           handlePlay={() => handleDetailViewToggle(DetailView.None)}
         />
       );
@@ -87,6 +81,7 @@ const Home: React.FC<HomeProps> = () => {
             toggleRewardNFT={() => handleDetailViewToggle(DetailView.RewardNFT)}
             toggleGemSkin={() => handleDetailViewToggle(DetailView.GemSkin)}
             toggleRanking={() => handleDetailViewToggle(DetailView.Ranking)}
+            toggleResult={() => handleDetailViewToggle(DetailView.Result)}
             handlePlay={handlePlay}
           />
         );
