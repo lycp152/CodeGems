@@ -42,6 +42,8 @@ interface PlayProps {
   setScore: React.Dispatch<React.SetStateAction<number>>; // 得点を設定する関数
   toggleBackToTitle: () => void;
   handleTimeUp: () => void;
+  isGamePaused: boolean;
+  setIsGamePaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // ゲームコンポーネント
@@ -52,6 +54,8 @@ const Play: React.FC<PlayProps> = ({
   setScore,
   toggleBackToTitle,
   handleTimeUp,
+  isGamePaused,
+  setIsGamePaused,
 }) => {
   // グリッドと選択されたジェムの状態を管理するState
   const [isPlaying, setIsPlaying] = useState(false);
@@ -60,7 +64,6 @@ const Play: React.FC<PlayProps> = ({
     row: number;
     col: number;
   } | null>(null); // 選択されたジェムの位置
-  const [isGamePaused, setIsGamePaused] = useState(false);
 
   // グリッドを初期化する関数
   function initializeGrid(): Gem[][] {

@@ -26,6 +26,7 @@ const Home: React.FC<HomeProps> = () => {
   const [remainingTime, setRemainingTime] = useState<number>(120);
   const [score, setScore] = useState<number>(0);
   const [hintCount, setHintCount] = useState<number>(4);
+  const [isGamePaused, setIsGamePaused] = useState(false);
 
   const handleDetailViewToggle = (view: DetailView) => {
     setDetailView(view);
@@ -37,6 +38,7 @@ const Home: React.FC<HomeProps> = () => {
     setScore(0);
     setRemainingTime(120);
     setHintCount(4); // プレイ再開時にhintCountをリセット
+    setIsGamePaused(false);
   };
 
   // タイマーがゼロになったときに呼び出す関数
@@ -73,7 +75,9 @@ const Home: React.FC<HomeProps> = () => {
               setIsPlaying(false);
               handleDetailViewToggle(DetailView.None);
             }}
-            handleTimeUp={handleTimeUp} // タイマーがゼロになったら呼び出す
+            handleTimeUp={handleTimeUp}
+            isGamePaused={isGamePaused}
+            setIsGamePaused={setIsGamePaused}
           />
         );
       } else {
@@ -96,15 +100,21 @@ const Home: React.FC<HomeProps> = () => {
       <div className="main-contents">
         {renderDetailView()}
         <SideMenuButton
-          toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
-          toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
+          toggleHowToPlay={() => {
+            handleDetailViewToggle(DetailView.HowToPlay);
+          }}
+          toggleBackToTitle={() => {
+            handleDetailViewToggle(DetailView.None);
+          }}
           toggleBackToPlay={() => {
             setDetailView(DetailView.None);
           }}
           isDetailView={detailView !== DetailView.None}
           isPlaying={isPlaying}
-          hintCount={hintCount} // hintCountを渡す
-          setHintCount={setHintCount} // setHintCountを渡す
+          hintCount={hintCount}
+          setHintCount={setHintCount}
+          isGamePaused={isGamePaused}
+          setIsGamePaused={setIsGamePaused}
         />
       </div>
       <footer>
