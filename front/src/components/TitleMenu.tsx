@@ -19,18 +19,25 @@ const TitleMenu: React.FC<TitleMenuProps> = ({
   toggleRanking,
   toggleResult,
 }) => {
-  const handleMenuItemClick = (label: string) => {
-    if (label === "rewardNFT") toggleRewardNFT();
-    else if (label === "gemSkin") toggleGemSkin();
-    else if (label === "ranking") toggleRanking();
-    else if (label === "result") toggleResult();
-  };
-
   const menuItems = [
     { label: "rewardNFT", icon: <MilitaryTechIcon style={{ fontSize: 80 }} /> },
     { label: "gemSkin", icon: <Diamond style={{ fontSize: 80 }} /> },
     { label: "ranking", icon: <EmojiEvents style={{ fontSize: 80 }} /> },
   ];
+
+  const handleMenuItemClick = (label: string) => {
+    const menuItemClickActions: Record<string, () => void> = {
+      rewardNFT: toggleRewardNFT,
+      gemSkin: toggleGemSkin,
+      ranking: toggleRanking,
+      result: toggleResult,
+    };
+
+    const action = menuItemClickActions[label];
+    if (action) {
+      action();
+    }
+  };
 
   return (
     <div className="main-menu">

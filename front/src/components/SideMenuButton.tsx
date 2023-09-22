@@ -19,7 +19,7 @@ interface SideMenuButtonProps {
   isDetailView: boolean;
   isPlaying: boolean;
   hintCount: number;
-  setHintCount: React.Dispatch<React.SetStateAction<number>>; // 追加
+  setHintCount: React.Dispatch<React.SetStateAction<number>>;
   isGamePaused: boolean;
   setIsGamePaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -40,9 +40,8 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
 
   const handleLogout = async () => {
     const auth = getAuth();
-    await signOut(auth).then(() => {
-      setIsLoggedIn(false);
-    });
+    await signOut(auth);
+    setIsLoggedIn(false);
   };
 
   const handleSoundToggle = () => setIsSoundOn(!isSoundOn);
@@ -53,9 +52,9 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
     }
   };
 
-  return (
-    <div className="side-buttons">
-      {!isDetailView && (
+  const renderButtons = () => {
+    if (!isDetailView) {
+      return (
         <>
           {isPlaying ? (
             <IconButton
@@ -94,17 +93,19 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
             label="howToPlay"
           />
         </>
-      )}
-      {isDetailView && (
-        // プレイ中の場合、backToPlay ボタンを表示/プレイ中でない場合、backToTitle ボタンを表示
+      );
+    } else {
+      return (
         <IconButton
           onClick={isPlaying ? toggleBackToPlay : toggleBackToTitle}
           icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
           label={isPlaying ? "backToPlay" : "backToTitle"}
         />
-      )}
-    </div>
-  );
+      );
+    }
+  };
+
+  return <div className="side-buttons">{renderButtons()}</div>;
 };
 
 export default SideMenuButton;
