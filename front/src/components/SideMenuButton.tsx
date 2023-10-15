@@ -35,7 +35,7 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   isGamePaused,
   setIsGamePaused,
 }) => {
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, githubUsername } = useAuth(); // GitHubのユーザーネームを追加
   const [isSoundOn, setIsSoundOn] = useState(true);
 
   const handleLogout = async () => {
@@ -69,11 +69,16 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
             />
           ) : (
             isLoggedIn && (
-              <IconButton
-                onClick={handleLogout}
-                icon={<LogoutIcon style={{ fontSize: 80 }} />}
-                label="logOut"
-              />
+              <div>
+                <img src="/images/github-icon.png" alt="GitHub Icon" />{" "}
+                {/* GitHubのアイコンを表示 */}
+                <div>{githubUsername}</div> {/* GitHubのユーザーネームを表示 */}
+                <IconButton
+                  onClick={handleLogout}
+                  icon={<LogoutIcon style={{ fontSize: 80 }} />}
+                  label="logOut"
+                />
+              </div>
             )
           )}
           <IconButton

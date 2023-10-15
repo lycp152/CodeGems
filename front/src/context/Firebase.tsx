@@ -1,5 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GithubAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  GithubAuthProvider,
+  UserCredential,
+  signInWithPopup,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCDndMwOWE2KsDzaZvkdrf5_irFeGQ5kb8",
@@ -18,3 +23,12 @@ const auth = getAuth(app);
 const provider = new GithubAuthProvider();
 
 export { auth, provider };
+
+export const signInWithGitHub = async (): Promise<UserCredential> => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
