@@ -15,8 +15,11 @@ const Gem: React.FC<GemProps> = ({
 }) => (
   <div
     className={`gem gem-${gemValue} ${isSelected ? "selected" : ""}`}
+    style={{
+      position: "relative",
+      cursor: "pointer",
+    }}
     onClick={onClick}
-    style={{ position: "relative" }}
   >
     <div className="gem-background" style={{ backgroundColor, zIndex: -1 }} />
     {isSelected && <div className="gem-cursor" />}

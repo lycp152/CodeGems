@@ -18,8 +18,9 @@ const Paused: React.FC = () => {
 
         const data = await response.text();
         setText(data);
-      } catch (error) {
-        console.error("データの取得エラー:", error);
+      } catch (error: any) {
+        console.error("データの取得エラー:", error.message);
+        setText("データの取得に失敗しました");
       }
     };
 

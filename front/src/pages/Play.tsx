@@ -41,6 +41,9 @@ interface PlayProps {
   score: number; // 得点
   setScore: React.Dispatch<React.SetStateAction<number>>; // 得点を設定する関数
   toggleBackToTitle: () => void;
+  handleTimeUp: () => void;
+  isGamePaused: boolean;
+  setIsGamePaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // ゲームコンポーネント
@@ -50,14 +53,17 @@ const Play: React.FC<PlayProps> = ({
   score,
   setScore,
   toggleBackToTitle,
+  handleTimeUp,
+  isGamePaused,
+  setIsGamePaused,
 }) => {
   // グリッドと選択されたジェムの状態を管理するState
+  const [isPlaying, setIsPlaying] = useState(false);
   const [grid, setGrid] = useState<Gem[][]>(() => initializeGrid()); // グリッドの状態
   const [selectedGem, setSelectedGem] = useState<{
     row: number;
     col: number;
   } | null>(null); // 選択されたジェムの位置
-  const [isGamePaused, setIsGamePaused] = useState(false);
 
   // グリッドを初期化する関数
   function initializeGrid(): Gem[][] {
@@ -112,11 +118,15 @@ const Play: React.FC<PlayProps> = ({
       }
     }, 1000);
 
+    if (remainingTime === 0) {
+      handleTimeUp(); // タイマーがゼロになったら handleTimeUp を呼び出す
+    }
+
     // コンポーネントのアンマウント時にタイマーをクリア
     return () => {
       clearInterval(timer);
     };
-  }, [isGamePaused, setRemainingTime, grid]);
+  }, [isGamePaused, setRemainingTime, grid, remainingTime, handleTimeUp]);
 
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {
@@ -392,6 +402,8 @@ const Play: React.FC<PlayProps> = ({
         togglePause={togglePause}
         toggleBackToTitle={toggleBackToTitle}
         isGamePaused={isGamePaused}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
       />
     </div>
   );

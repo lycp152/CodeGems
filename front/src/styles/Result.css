@@ -1,43 +1,36 @@
-.ranking-container {
-  button {
-    padding: 10px 20px;
-    font-size: 18px;
-    margin: 5px;
-    cursor: pointer;
-  }
-  h2 {
-    padding: 0;
-  }
-  .score {
-    font-size: 50px;
-    margin: 0;
-  }
-}
-
-ol {
-  list-style: decimal;
-}
-
-li {
-  font-size: 20px;
-  margin-top: 5px;
-}
-
-.rankings {
+.result-container {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start; /* 上揃えにする場合は flex-start を使用 */
-  flex-wrap: wrap; /* ラップするために必要 */
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  ol {
+    margin-top: 0;
+  }
+
+  li {
+    font-size: 24px;
+    margin-top: 5px;
+  }
 }
 
-.top10,
-.top11-20 {
-  flex-basis: 50%;
-  text-align: center;
+.result-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score {
+  font-size: 2rem; /* スコアのフォントサイズを設定 */
+  margin: 0;
+}
+
+.result-buttons {
+  display: flex;
+  gap: 20px; /* ボタン間のスペースを設定 */
+  justify-content: center; /* ボタンを中央に配置 */
 }
 
 .button-wrapper {
   display: flex;
   gap: 10px; /* ボタン間の間隔を設定 */
-  justify-content: center; /* ボタンを中央に配置 */
 }

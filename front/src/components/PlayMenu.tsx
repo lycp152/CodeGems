@@ -11,13 +11,22 @@ interface PlayMenuProps {
   togglePause: () => void;
   toggleBackToTitle: () => void;
   isGamePaused: boolean;
+  isPlaying: boolean;
+  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PlayMenu: React.FC<PlayMenuProps> = ({
   togglePause,
   toggleBackToTitle,
   isGamePaused,
+  isPlaying,
+  setIsPlaying,
 }) => {
+  const handleBackToTitle = () => {
+    setIsPlaying(false);
+    toggleBackToTitle();
+  };
+
   return (
     <div className="play-menu">
       <IconButton
@@ -32,7 +41,7 @@ const PlayMenu: React.FC<PlayMenuProps> = ({
         label={isGamePaused ? "play" : "pause"}
       />
       <IconButton
-        onClick={toggleBackToTitle}
+        onClick={handleBackToTitle}
         icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
         label="backToTitle"
       />

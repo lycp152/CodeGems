@@ -6,15 +6,17 @@ interface NumberedImageProps {
   label: string;
 }
 
-export default function NumberedImage({
+const NumberedImage: React.FC<NumberedImageProps> = ({
   number,
   imageSrc,
   label,
-}: NumberedImageProps) {
+}) => {
   return (
     <div className="numbered-image-container">
       <div className="number">{number}</div>
       <img src={imageSrc} alt={`Gem ${number}`} className="image" />
     </div>
   );
-}
+};
+
+export default NumberedImage;

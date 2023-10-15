@@ -3,16 +3,17 @@ import "../styles/Title.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { useAuth } from "../context/AuthContext";
 import LongButton from "../components/LongButton";
-import MainMenu from "../components/MainMenu";
-import { provider } from "../context/Firebase"
+import TitleMenu from "../components/TitleMenu";
+import { provider } from "../context/Firebase";
 import { signInWithPopup, getAuth } from "firebase/auth";
-import { FirebaseError } from '@firebase/util'
+import { FirebaseError } from "@firebase/util";
 
 interface TitleProps {
   toggleHowToPlay: () => void;
   toggleRewardNFT: () => void;
   toggleGemSkin: () => void;
   toggleRanking: () => void;
+  toggleResult: () => void;
   handlePlay: () => void;
 }
 
@@ -20,6 +21,7 @@ const Title: React.FC<TitleProps> = ({
   toggleRewardNFT,
   toggleGemSkin,
   toggleRanking,
+  toggleResult,
   handlePlay,
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -28,16 +30,17 @@ const Title: React.FC<TitleProps> = ({
 
   const handleLogin = async () => {
     const auth = getAuth();
-     await signInWithPopup( auth, provider )
-     .then((result) => {
-      setIsLoggedIn(true);
-      console.log(result);
-  }).catch((e) => {
-    if( e instanceof FirebaseError ){
-      console.log(e)
-    }
-  })
-};
+    await signInWithPopup(auth, provider)
+      .then((result) => {
+        setIsLoggedIn(true);
+        console.log(result);
+      })
+      .catch((e) => {
+        if (e instanceof FirebaseError) {
+          console.log(e);
+        }
+      });
+  };
 
   const renderButtonSection = () => {
     if (!isLoggedIn) {
@@ -47,15 +50,15 @@ const Title: React.FC<TitleProps> = ({
           label="Log in with GitHub"
           onClick={handleLogin}
         />
-
       );
     } else {
       return (
         <>
-          <MainMenu
+          <TitleMenu
             toggleRewardNFT={toggleRewardNFT}
             toggleGemSkin={toggleGemSkin}
             toggleRanking={toggleRanking}
+            toggleResult={toggleResult}
           />
           <LongButton label="Play" onClick={handlePlay} />
         </>

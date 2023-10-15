@@ -25,68 +25,73 @@ const Home: React.FC<HomeProps> = () => {
   const [detailView, setDetailView] = useState(DetailView.None);
   const [remainingTime, setRemainingTime] = useState<number>(120);
   const [score, setScore] = useState<number>(0);
-  const github_client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
-  const github_oauth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&scope=user:read`;
+  const [hintCount, setHintCount] = useState<number>(4);
+  const [isGamePaused, setIsGamePaused] = useState(false);
 
   const handleDetailViewToggle = (view: DetailView) => {
-    setIsPlaying(false);
     setDetailView(view);
   };
 
   const handlePlay = () => {
     setIsPlaying(true);
     setDetailView(DetailView.None);
-    setScore(0); // Reset the score when starting a new play
-    setRemainingTime(120); // Reset the remaining time when starting a new play
+    setScore(0);
+    setRemainingTime(120);
+    setHintCount(4); // プレイ再開時にhintCountをリセット
+    setIsGamePaused(false);
+  };
+
+  // タイマーがゼロになったときに呼び出す関数
+  const handleTimeUp = () => {
+    setIsPlaying(false);
+    setDetailView(DetailView.Result);
   };
 
   const renderDetailView = () => {
-    switch (detailView) {
-      case DetailView.HowToPlay:
-        return <HowToPlay />;
-      case DetailView.RewardNFT:
-        return <RewardNFT />;
-      case DetailView.GemSkin:
-        return <GemSkin />;
-      case DetailView.Ranking:
-        return <Ranking />;
-      case DetailView.Result:
+    if (detailView === DetailView.Result) {
+      return (
+        <Result
+          score={score}
+          handlePlay={() => handleDetailViewToggle(DetailView.None)}
+        />
+      );
+    } else if (detailView === DetailView.HowToPlay) {
+      return <HowToPlay />;
+    } else if (detailView === DetailView.RewardNFT) {
+      return <RewardNFT />;
+    } else if (detailView === DetailView.GemSkin) {
+      return <GemSkin />;
+    } else if (detailView === DetailView.Ranking) {
+      return <Ranking />;
+    } else if (detailView === DetailView.None) {
+      if (isPlaying) {
         return (
-          <Result
+          <Play
+            remainingTime={remainingTime}
+            setRemainingTime={setRemainingTime}
             score={score}
-            handleBack={() => handleDetailViewToggle(DetailView.None)}
-            handlePlay={() => handleDetailViewToggle(DetailView.None)}
+            setScore={setScore}
+            toggleBackToTitle={() => {
+              setIsPlaying(false);
+              handleDetailViewToggle(DetailView.None);
+            }}
+            handleTimeUp={handleTimeUp}
+            isGamePaused={isGamePaused}
+            setIsGamePaused={setIsGamePaused}
           />
         );
-      default:
-        if (isPlaying) {
-          if (remainingTime <= 0) {
-            handleDetailViewToggle(DetailView.Result);
-          }
-          return (
-            <Play
-              remainingTime={remainingTime}
-              setRemainingTime={setRemainingTime}
-              score={score}
-              setScore={setScore}
-              toggleBackToTitle={() => handleDetailViewToggle(DetailView.None)}
-            />
-          );
-        } else {
-          return (
-            <Title
-              toggleHowToPlay={() =>
-                handleDetailViewToggle(DetailView.HowToPlay)
-              }
-              toggleRewardNFT={() =>
-                handleDetailViewToggle(DetailView.RewardNFT)
-              }
-              toggleGemSkin={() => handleDetailViewToggle(DetailView.GemSkin)}
-              toggleRanking={() => handleDetailViewToggle(DetailView.Ranking)}
-              handlePlay={handlePlay}
-            />
-          );
-        }
+      } else {
+        return (
+          <Title
+            toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
+            toggleRewardNFT={() => handleDetailViewToggle(DetailView.RewardNFT)}
+            toggleGemSkin={() => handleDetailViewToggle(DetailView.GemSkin)}
+            toggleRanking={() => handleDetailViewToggle(DetailView.Ranking)}
+            toggleResult={() => handleDetailViewToggle(DetailView.Result)}
+            handlePlay={handlePlay}
+          />
+        );
+      }
     }
   };
 
@@ -95,11 +100,21 @@ const Home: React.FC<HomeProps> = () => {
       <div className="main-contents">
         {renderDetailView()}
         <SideMenuButton
-          toggleHowToPlay={() => handleDetailViewToggle(DetailView.HowToPlay)}
-          toggleBackToTitle={() => setDetailView(DetailView.None)}
-          toggleBackToPlay={() => setDetailView(DetailView.None)}
+          toggleHowToPlay={() => {
+            handleDetailViewToggle(DetailView.HowToPlay);
+          }}
+          toggleBackToTitle={() => {
+            handleDetailViewToggle(DetailView.None);
+          }}
+          toggleBackToPlay={() => {
+            setDetailView(DetailView.None);
+          }}
           isDetailView={detailView !== DetailView.None}
           isPlaying={isPlaying}
+          hintCount={hintCount}
+          setHintCount={setHintCount}
+          isGamePaused={isGamePaused}
+          setIsGamePaused={setIsGamePaused}
         />
       </div>
       <footer>

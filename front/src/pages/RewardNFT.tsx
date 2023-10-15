@@ -6,7 +6,7 @@ export default function RewardNFT() {
   return (
     <main className="main">
       <h1 className="title">rewardNFT</h1>
-      <div className="connect">
+      <div className="connect-wallet">
         <ConnectWallet
           dropdownPosition={{
             side: "bottom",

@@ -18,6 +18,10 @@ interface SideMenuButtonProps {
   toggleBackToPlay: () => void;
   isDetailView: boolean;
   isPlaying: boolean;
+  hintCount: number;
+  setHintCount: React.Dispatch<React.SetStateAction<number>>;
+  isGamePaused: boolean;
+  setIsGamePaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SideMenuButton: React.FC<SideMenuButtonProps> = ({
@@ -26,26 +30,31 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   toggleBackToPlay,
   isDetailView,
   isPlaying,
+  hintCount,
+  setHintCount,
+  isGamePaused,
+  setIsGamePaused,
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [isSoundOn, setIsSoundOn] = useState(true);
-  const [hintCount, setHintCount] = useState<number>(4);
 
   const handleLogout = async () => {
     const auth = getAuth();
-    console.log(auth);
-    await signOut(auth).then((result) => {
-      setIsLoggedIn(false);
-      console.log(result);
-    });
+    await signOut(auth);
+    setIsLoggedIn(false);
   };
-  const handleSoundToggle = () => setIsSoundOn(!isSoundOn);
-  const handleHintButtonClick = () =>
-    hintCount > 0 && setHintCount((prevCount) => prevCount - 1);
 
-  return (
-    <div className="side-buttons">
-      {!isDetailView && (
+  const handleSoundToggle = () => setIsSoundOn(!isSoundOn);
+
+  const handleHintButtonClick = () => {
+    if (hintCount > 0) {
+      setHintCount((prevCount) => prevCount - 1);
+    }
+  };
+
+  const renderButtons = () => {
+    if (!isDetailView) {
+      return (
         <>
           {isPlaying ? (
             <IconButton
@@ -84,25 +93,19 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
             label="howToPlay"
           />
         </>
-      )}
-      {isDetailView && (
-        <>
-          <IconButton
-            onClick={toggleBackToTitle}
-            icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
-            label="backToTitle"
-          />
-          {isPlaying && (
-            <IconButton
-              onClick={toggleBackToPlay}
-              icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
-              label="backToPlay"
-            />
-          )}
-        </>
-      )}
-    </div>
-  );
+      );
+    } else {
+      return (
+        <IconButton
+          onClick={isPlaying ? toggleBackToPlay : toggleBackToTitle}
+          icon={<ArrowBackIcon style={{ fontSize: 80 }} />}
+          label={isPlaying ? "backToPlay" : "backToTitle"}
+        />
+      );
+    }
+  };
+
+  return <div className="side-buttons">{renderButtons()}</div>;
 };
 
 export default SideMenuButton;
