@@ -5,11 +5,12 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { signInWithGitHub, auth } from "./Firebase"; // FirebaseとGitHubログイン関数をインポート
+import { onAuthStateChanged } from "firebase/auth"; // Firebase Auth関連のインポート
+import { auth } from "./Firebase"; // Firebase初期化済みアプリのインポート
 import "firebase/auth";
-import type { User } from "firebase/auth";
+import { User } from "firebase/auth";
 
-// AuthContextPropsの定義（githubUsernameを追加）
+// AuthContextPropsの定義
 interface AuthContextProps {
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,24 +35,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (user) {
         // ユーザーがログインしている場合
         setIsLoggedIn(true);
+        // ログインユーザーの情報を設定
+        setGithubUsername(user.displayName || "");
       } else {
         setIsLoggedIn(false);
+        setGithubUsername("");
       }
     };
 
     // Firebaseの認証ステータスの変更を監視
-    const unsubscribe = auth.onAuthStateChanged(handleAuthStateChanged);
+    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
 
     // コンポーネントがアンマウントされたときに監視を解除
     return () => unsubscribe();
-  }, []);
-
-  // コンポーネントがマウントされたときにGitHubでのログインを試みる
-  useEffect(() => {
-    // GitHubログインを試みて成功時にFirebase認証ステータスが変更されます
-    signInWithGitHub().catch((error) => {
-      console.error("GitHubログインエラー:", error);
-    });
   }, []);
 
   const authContextValue: AuthContextProps = {

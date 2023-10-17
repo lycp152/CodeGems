@@ -25,8 +25,6 @@ const Title: React.FC<TitleProps> = ({
   handlePlay,
 }) => {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
-  const github_client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
-  const github_oauth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&scope=user:read`;
 
   const handleLogin = async () => {
     const auth = getAuth();
