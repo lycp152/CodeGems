@@ -16,6 +16,7 @@ import {
 interface Gem {
   gemValue: number;
   backgroundColor: string;
+  isMatched: boolean; // マッチしたジェムかどうかを示すフラグ
 }
 
 // 新しいランダムなジェムの値を生成する関数
@@ -87,7 +88,7 @@ const Play: React.FC<PlayProps> = ({
         }
         const gemValue = generateRandomGemValue(excludedValues);
         const backgroundColor = generateRandomBackgroundColor();
-        newRow.push({ gemValue, backgroundColor });
+        newRow.push({ gemValue, backgroundColor, isMatched: false });
       }
       newGrid.push(newRow);
     }
@@ -133,19 +134,19 @@ const Play: React.FC<PlayProps> = ({
     const newGrid = currentGrid.map((row) => [...row]);
     const gemClasses: string[] = []; // ジェムのクラス名を管理する変数
 
-    // マッチングをチェックしてジェムを消す
-    function checkAndRemoveMatches() {
-      checkHorizontalMatches();
-      checkVerticalMatches();
-    }
-
-    // 横方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
-    function checkHorizontalMatches() {
+    // マッチングをチェックしてisMatchedフラグを設定
+    function checkAndSetMatchedFlags() {
       for (let row = 0; row < numRows; row++) {
         for (let col = 0; col < numCols; col++) {
+          if (newGrid[row][col].isMatched) {
+            // すでにマッチ済みの場合はスキップ
+            continue;
+          }
           const gemValue = newGrid[row][col].gemValue;
           let horizontalMatches = 1;
+          let verticalMatches = 1;
 
+          // 横方向のマッチングをチェック
           for (let i = col + 1; i < numCols; i++) {
             if (newGrid[row][i].gemValue === gemValue) {
               horizontalMatches++;
@@ -154,20 +155,7 @@ const Play: React.FC<PlayProps> = ({
             }
           }
 
-          if (horizontalMatches >= MIN_MATCH_COUNT) {
-            removeHorizontalMatches(row, col, horizontalMatches);
-          }
-        }
-      }
-    }
-
-    // 縦方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
-    function checkVerticalMatches() {
-      for (let col = 0; col < numCols; col++) {
-        for (let row = 0; row < numRows; row++) {
-          const gemValue = newGrid[row][col].gemValue;
-          let verticalMatches = 1;
-
+          // 縦方向のマッチングをチェック
           for (let i = row + 1; i < numRows; i++) {
             if (newGrid[i][col].gemValue === gemValue) {
               verticalMatches++;
@@ -176,30 +164,32 @@ const Play: React.FC<PlayProps> = ({
             }
           }
 
+          // MIN_MATCH_COUNT 以上のマッチングがある場合、フラグを設定
+          if (horizontalMatches >= MIN_MATCH_COUNT) {
+            for (let i = col; i < col + horizontalMatches; i++) {
+              newGrid[row][i].isMatched = true;
+            }
+          }
+
           if (verticalMatches >= MIN_MATCH_COUNT) {
-            removeVerticalMatches(row, col, verticalMatches);
+            for (let i = row; i < row + verticalMatches; i++) {
+              newGrid[i][col].isMatched = true;
+            }
           }
         }
       }
     }
-
-    // 連続したジェムを消す処理
-    function removeHorizontalMatches(
-      row: number,
-      col: number,
-      matches: number
-    ) {
-      gemClasses.push("blinking");
-      for (let i = col; i < col + matches; i++) {
-        newGrid[row][i].gemValue = -1;
-      }
-    }
-
-    // 連続したジェムを消す処理
-    function removeVerticalMatches(row: number, col: number, matches: number) {
-      gemClasses.push("blinking");
-      for (let i = row; i < row + matches; i++) {
-        newGrid[i][col].gemValue = -1;
+    // マッチしたジェムを削除
+    function removeMatchedGems() {
+      for (let row = 0; row < numRows; row++) {
+        for (let col = 0; col < numCols; col++) {
+          if (newGrid[row][col].isMatched) {
+            // isMatchedフラグが設定されたジェムを削除
+            newGrid[row][col].gemValue = -1;
+            newGrid[row][col].isMatched = false; // フラグをリセット
+            gemClasses.push("blinking");
+          }
+        }
       }
     }
 
@@ -249,13 +239,18 @@ const Play: React.FC<PlayProps> = ({
             const newGem = {
               gemValue: randomGemValue,
               backgroundColor: initialBackgroundColor,
+              isMatched: false, // 新しいジェムの初期状態はマッチしていない
             };
             newGrid[row][col] = newGem;
             emptySpaces++;
           } else if (emptySpaces > 0) {
             const currentGem = newGrid[row][col];
             newGrid[row + emptySpaces][col] = currentGem;
-            newGrid[row][col] = { gemValue: -1, backgroundColor: "" };
+            newGrid[row][col] = {
+              gemValue: -1,
+              backgroundColor: "",
+              isMatched: false,
+            };
           }
         }
       }
@@ -271,7 +266,9 @@ const Play: React.FC<PlayProps> = ({
     }
 
     // マッチングをチェックしてジェムを消す
-    checkAndRemoveMatches();
+    checkAndSetMatchedFlags();
+    // マッチしたジェムを削除
+    removeMatchedGems();
     // ジェムが消えた直後に上にあるジェムを下に移動
     cascadeGems();
     // 得点を計算して加算
