@@ -9,10 +9,10 @@ import {
 } from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
 import IconButton from "./IconButton";
-import "../styles/SideMenuButton.css";
+import "../styles/SideMenu.css";
 import { signOut, getAuth } from "firebase/auth";
 
-interface SideMenuButtonProps {
+interface SideMenuProps {
   toggleHowToPlay: () => void;
   toggleBackToTitle: () => void;
   toggleBackToPlay: () => void;
@@ -24,7 +24,7 @@ interface SideMenuButtonProps {
   setIsGamePaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideMenuButton: React.FC<SideMenuButtonProps> = ({
+const SideMenu: React.FC<SideMenuProps> = ({
   toggleHowToPlay,
   toggleBackToTitle,
   toggleBackToPlay,
@@ -113,4 +113,4 @@ const SideMenuButton: React.FC<SideMenuButtonProps> = ({
   return <div className="side-buttons">{renderButtons()}</div>;
 };
 
-export default SideMenuButton;
+export default SideMenu;

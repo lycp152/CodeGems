@@ -9,7 +9,6 @@ import {
   numCols,
   numGemTypes,
   gemBackgroundColors,
-  MIN_MATCH_COUNT,
 } from "../components/constants";
 
 // ジェムの型を定義
@@ -135,71 +134,48 @@ const Play: React.FC<PlayProps> = ({
 
     // マッチングをチェックしてジェムを消す
     function checkAndRemoveMatches() {
-      checkHorizontalMatches();
-      checkVerticalMatches();
+      checkMatches("horizontal");
+      checkMatches("vertical");
     }
+    // マッチングをチェックする関数
+    function checkMatches(direction: "horizontal" | "vertical") {
+      const maxRows = direction === "horizontal" ? numRows : numCols;
+      const maxCols = direction === "horizontal" ? numCols : numRows;
 
-    // 横方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
-    function checkHorizontalMatches() {
-      for (let row = 0; row < numRows; row++) {
-        for (let col = 0; col < numCols; col++) {
-          const gemValue = newGrid[row][col].gemValue;
-          let horizontalMatches = 1;
+      for (let i = 0; i < maxRows; i++) {
+        for (let j = 0; j < maxCols - 2; j++) {
+          const firstGem =
+            direction === "horizontal" ? newGrid[i][j] : newGrid[j][i];
+          const secondGem =
+            direction === "horizontal" ? newGrid[i][j + 1] : newGrid[j + 1][i];
+          const thirdGem =
+            direction === "horizontal" ? newGrid[i][j + 2] : newGrid[j + 2][i];
 
-          for (let i = col + 1; i < numCols; i++) {
-            if (newGrid[row][i].gemValue === gemValue) {
-              horizontalMatches++;
-            } else {
-              break;
-            }
-          }
-
-          if (horizontalMatches >= MIN_MATCH_COUNT) {
-            removeHorizontalMatches(row, col, horizontalMatches);
-          }
-        }
-      }
-    }
-
-    // 縦方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
-    function checkVerticalMatches() {
-      for (let col = 0; col < numCols; col++) {
-        for (let row = 0; row < numRows; row++) {
-          const gemValue = newGrid[row][col].gemValue;
-          let verticalMatches = 1;
-
-          for (let i = row + 1; i < numRows; i++) {
-            if (newGrid[i][col].gemValue === gemValue) {
-              verticalMatches++;
-            } else {
-              break;
-            }
-          }
-
-          if (verticalMatches >= MIN_MATCH_COUNT) {
-            removeVerticalMatches(row, col, verticalMatches);
+          if (
+            firstGem.gemValue !== -1 &&
+            firstGem.gemValue === secondGem.gemValue &&
+            firstGem.gemValue === thirdGem.gemValue
+          ) {
+            removeMatches(i, j, 3, direction);
           }
         }
       }
     }
 
     // 連続したジェムを消す処理
-    function removeHorizontalMatches(
+    function removeMatches(
       row: number,
       col: number,
-      matches: number
+      matches: number,
+      direction: "horizontal" | "vertical"
     ) {
       gemClasses.push("blinking");
-      for (let i = col; i < col + matches; i++) {
-        newGrid[row][i].gemValue = -1;
-      }
-    }
-
-    // 連続したジェムを消す処理
-    function removeVerticalMatches(row: number, col: number, matches: number) {
-      gemClasses.push("blinking");
-      for (let i = row; i < row + matches; i++) {
-        newGrid[i][col].gemValue = -1;
+      for (let i = 0; i < matches; i++) {
+        if (direction === "horizontal") {
+          newGrid[row][col + i].gemValue = -1;
+        } else {
+          newGrid[row + i][col].gemValue = -1;
+        }
       }
     }
 

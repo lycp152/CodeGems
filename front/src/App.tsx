@@ -7,7 +7,7 @@ import GemSkin from "./pages/GemSkin";
 import Ranking from "./pages/Ranking";
 import Play from "./pages/Play";
 import Result from "./pages/Result";
-import SideMenuButton from "./components/SideMenuButton";
+import SideMenu from "./components/SideMenu";
 
 enum DetailView {
   None,
@@ -99,7 +99,7 @@ const Home: React.FC<HomeProps> = () => {
     <main className="main">
       <div className="main-contents">
         {renderDetailView()}
-        <SideMenuButton
+        <SideMenu
           toggleHowToPlay={() => {
             handleDetailViewToggle(DetailView.HowToPlay);
           }}

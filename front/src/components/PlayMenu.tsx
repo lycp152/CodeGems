@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/SideMenuButton.css";
+import "../styles/SideMenu.css";
 import {
   Pause as PauseIcon,
   PlayArrow as PlayArrowIcon,
