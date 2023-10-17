@@ -9,6 +9,7 @@ import {
   numCols,
   numGemTypes,
   gemBackgroundColors,
+  MIN_MATCH_COUNT,
 } from "../components/constants";
 
 // ジェムの型を定義
@@ -129,57 +130,76 @@ const Play: React.FC<PlayProps> = ({
 
   // 連続するジェムを消す関数
   function removeMatchesAndCascade(currentGrid: Gem[][]): void {
-    function checkForMatches(gridToCheck: Gem[][]): boolean {
-      let matchesFound = false;
+    const newGrid = currentGrid.map((row) => [...row]);
+    const gemClasses: string[] = []; // ジェムのクラス名を管理する変数
 
-      // 横方向のマッチングをチェック
+    // マッチングをチェックしてジェムを消す
+    function checkAndRemoveMatches() {
+      checkHorizontalMatches();
+      checkVerticalMatches();
+    }
+
+    // 横方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
+    function checkHorizontalMatches() {
       for (let row = 0; row < numRows; row++) {
-        for (let col = 0; col < numCols - 2; col++) {
-          if (
-            gridToCheck[row][col].gemValue !== -1 &&
-            gridToCheck[row][col].gemValue ===
-              gridToCheck[row][col + 1].gemValue &&
-            gridToCheck[row][col].gemValue ===
-              gridToCheck[row][col + 2].gemValue
-          ) {
-            matchesFound = true;
-            removeMatches(row, col, 3, "horizontal");
+        for (let col = 0; col < numCols; col++) {
+          const gemValue = newGrid[row][col].gemValue;
+          let horizontalMatches = 1;
+
+          for (let i = col + 1; i < numCols; i++) {
+            if (newGrid[row][i].gemValue === gemValue) {
+              horizontalMatches++;
+            } else {
+              break;
+            }
+          }
+
+          if (horizontalMatches >= MIN_MATCH_COUNT) {
+            removeHorizontalMatches(row, col, horizontalMatches);
           }
         }
       }
+    }
 
-      // 縦方向のマッチングをチェック
+    // 縦方向のマッチングをチェックし、3つ以上の連続したジェムを消す処理
+    function checkVerticalMatches() {
       for (let col = 0; col < numCols; col++) {
-        for (let row = 0; row < numRows - 2; row++) {
-          if (
-            gridToCheck[row][col].gemValue !== -1 &&
-            gridToCheck[row][col].gemValue ===
-              gridToCheck[row + 1][col].gemValue &&
-            gridToCheck[row][col].gemValue ===
-              gridToCheck[row + 2][col].gemValue
-          ) {
-            matchesFound = true;
-            removeMatches(row, col, 3, "vertical");
+        for (let row = 0; row < numRows; row++) {
+          const gemValue = newGrid[row][col].gemValue;
+          let verticalMatches = 1;
+
+          for (let i = row + 1; i < numRows; i++) {
+            if (newGrid[i][col].gemValue === gemValue) {
+              verticalMatches++;
+            } else {
+              break;
+            }
+          }
+
+          if (verticalMatches >= MIN_MATCH_COUNT) {
+            removeVerticalMatches(row, col, verticalMatches);
           }
         }
       }
-
-      return matchesFound;
     }
 
     // 連続したジェムを消す処理
-    function removeMatches(
+    function removeHorizontalMatches(
       row: number,
       col: number,
-      matches: number,
-      direction: "horizontal" | "vertical"
+      matches: number
     ) {
-      for (let i = 0; i < matches; i++) {
-        if (direction === "horizontal") {
-          currentGrid[row][col + i].gemValue = -1;
-        } else {
-          currentGrid[row + i][col].gemValue = -1;
-        }
+      gemClasses.push("blinking");
+      for (let i = col; i < col + matches; i++) {
+        newGrid[row][i].gemValue = -1;
+      }
+    }
+
+    // 連続したジェムを消す処理
+    function removeVerticalMatches(row: number, col: number, matches: number) {
+      gemClasses.push("blinking");
+      for (let i = row; i < row + matches; i++) {
+        newGrid[i][col].gemValue = -1;
       }
     }
 
@@ -188,20 +208,20 @@ const Play: React.FC<PlayProps> = ({
       for (let col = 0; col < numCols; col++) {
         let newRow = numRows - 1;
         for (let row = numRows - 1; row >= 0; row--) {
-          if (currentGrid[row][col].gemValue !== -1) {
-            currentGrid[newRow][col].gemValue = currentGrid[row][col].gemValue;
+          if (newGrid[row][col].gemValue !== -1) {
+            newGrid[newRow][col].gemValue = newGrid[row][col].gemValue;
             newRow--;
           }
         }
         for (let i = newRow; i >= 0; i--) {
-          currentGrid[i][col].gemValue = -1;
+          newGrid[i][col].gemValue = -1;
         }
       }
     }
 
     // 得点を計算して加算
     function calculateAndSetScore() {
-      const newScore = currentGrid.reduce(
+      const newScore = newGrid.reduce(
         (acc, row) =>
           acc +
           row.reduce(
@@ -214,7 +234,7 @@ const Play: React.FC<PlayProps> = ({
         0
       );
 
-      setGrid(currentGrid);
+      setGrid(newGrid);
       setScore((prevScore) => prevScore + newScore);
     }
 
@@ -223,20 +243,19 @@ const Play: React.FC<PlayProps> = ({
       for (let col = 0; col < numCols; col++) {
         let emptySpaces = 0;
         for (let row = numRows - 1; row >= 0; row--) {
-          if (currentGrid[row][col].gemValue === -1) {
+          if (newGrid[row][col].gemValue === -1) {
             const randomGemValue = getRandomGemValue();
-            const initialBackgroundColor =
-              currentGrid[row][col].backgroundColor;
+            const initialBackgroundColor = newGrid[row][col].backgroundColor;
             const newGem = {
               gemValue: randomGemValue,
               backgroundColor: initialBackgroundColor,
             };
-            currentGrid[row][col] = newGem;
+            newGrid[row][col] = newGem;
             emptySpaces++;
           } else if (emptySpaces > 0) {
-            const currentGem = currentGrid[row][col];
-            currentGrid[row + emptySpaces][col] = currentGem;
-            currentGrid[row][col] = { gemValue: -1, backgroundColor: "" };
+            const currentGem = newGrid[row][col];
+            newGrid[row + emptySpaces][col] = currentGem;
+            newGrid[row][col] = { gemValue: -1, backgroundColor: "" };
           }
         }
       }
@@ -244,15 +263,15 @@ const Play: React.FC<PlayProps> = ({
 
     // 連続しているか再度判定
     function checkForAndRemoveMatchesRecursively() {
-      if (checkForMatches(currentGrid)) {
-        removeMatchesAndCascade(currentGrid);
+      if (checkForMatches(newGrid)) {
+        removeMatchesAndCascade(newGrid);
       } else {
         setSelectedGem(null);
       }
     }
 
     // マッチングをチェックしてジェムを消す
-    checkForMatches(currentGrid);
+    checkAndRemoveMatches();
     // ジェムが消えた直後に上にあるジェムを下に移動
     cascadeGems();
     // 得点を計算して加算
@@ -266,6 +285,39 @@ const Play: React.FC<PlayProps> = ({
   // ランダムなジェムの値を生成する関数
   function getRandomGemValue(): number {
     return Math.floor(Math.random() * 6); // 0 から 5 のランダムな整数
+  }
+
+  // ジェムの連続判定を行う関数
+  function checkForMatches(gridToCheck: Gem[][]): boolean {
+    // 横方向のマッチングをチェック
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols - 2; col++) {
+        if (
+          gridToCheck[row][col].gemValue !== -1 &&
+          gridToCheck[row][col].gemValue ===
+            gridToCheck[row][col + 1].gemValue &&
+          gridToCheck[row][col].gemValue === gridToCheck[row][col + 2].gemValue
+        ) {
+          return true; // 3つ以上の連続が見つかったらtrueを返す
+        }
+      }
+    }
+
+    // 縦方向のマッチングをチェック
+    for (let col = 0; col < numCols; col++) {
+      for (let row = 0; row < numRows - 2; row++) {
+        if (
+          gridToCheck[row][col].gemValue !== -1 &&
+          gridToCheck[row][col].gemValue ===
+            gridToCheck[row + 1][col].gemValue &&
+          gridToCheck[row][col].gemValue === gridToCheck[row + 2][col].gemValue
+        ) {
+          return true; // 3つ以上の連続が見つかったらtrueを返す
+        }
+      }
+    }
+
+    return false; // 連続が見つからなかったらfalseを返す
   }
 
   // ジェムがクリックされたときの処理
