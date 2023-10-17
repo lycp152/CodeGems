@@ -5,8 +5,8 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { onAuthStateChanged } from "firebase/auth"; // Firebase Auth関連のインポート
-import { auth } from "./Firebase"; // Firebase初期化済みアプリのインポート
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./Firebase";
 import "firebase/auth";
 import { User } from "firebase/auth";
 
@@ -31,12 +31,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Firebaseの認証ステータスが変更されたときに状態を更新
   useEffect(() => {
     // Firebaseの認証ステータスが変更されたときに呼び出されるコールバック
-    const handleAuthStateChanged = (user: User | null) => {
+    const handleAuthStateChanged = async (user: User | null) => {
       if (user) {
         // ユーザーがログインしている場合
         setIsLoggedIn(true);
-        // ログインユーザーの情報を設定
-        setGithubUsername(user.displayName || "");
+
+        // FirebaseユーザーオブジェクトからGitHubのアクセストークンを取得
+        const githubAccessToken = await user.getIdToken();
+
+        // GitHub APIにアクセスし、GitHubユーザー名を取得
+        try {
+          const response = await fetch("https://api.github.com/user", {
+            headers: {
+              Authorization: `Bearer ${githubAccessToken}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setGithubUsername(data.login);
+          } else {
+            console.error("GitHubユーザー名の取得に失敗しました。");
+          }
+        } catch (error) {
+          console.error("GitHubユーザー名の取得エラー:", error);
+        }
       } else {
         setIsLoggedIn(false);
         setGithubUsername("");
