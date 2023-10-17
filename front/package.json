@@ -23,6 +23,8 @@
     "http-browserify": "latest",
     "https": "npm:https-browserify",
     "https-browserify": "latest",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.31",
     "react": "^18.2",
     "react-dom": "^18.2",
     "react-router-dom": "^6.15.0",
@@ -31,7 +33,8 @@
     "typescript": "^4.7.2",
     "url": "latest",
     "web-vitals": "^2.1.4",
-    "zlib": "npm:browserify-zlib"
+    "zlib": "npm:browserify-zlib",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",
