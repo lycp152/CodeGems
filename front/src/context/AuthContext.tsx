@@ -5,10 +5,8 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./Firebase";
-import "firebase/auth";
-import { User } from "firebase/auth";
 
 // AuthContextPropsの定義
 interface AuthContextProps {
@@ -28,27 +26,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [githubUsername, setGithubUsername] = useState("");
 
-  // Firebaseの認証ステータスが変更されたときに状態を更新
   useEffect(() => {
-    // Firebaseの認証ステータスが変更されたときに呼び出されるコールバック
     const handleAuthStateChanged = async (user: User | null) => {
       if (user) {
-        // ユーザーがログインしている場合
         setIsLoggedIn(true);
 
-        // FirebaseユーザーオブジェクトからGitHubのアクセストークンを取得
-        const githubAccessToken = await user.getIdToken();
-
-        // GitHub APIにアクセスし、GitHubユーザー名を取得
+        // アクセストークンのリフレッシュと再認証
         try {
+          const githubAccessToken = await user.getIdToken();
+
           const response = await fetch("https://api.github.com/user", {
             headers: {
               Authorization: `Bearer ${githubAccessToken}`,
             },
           });
+
           if (response.ok) {
             const data = await response.json();
             setGithubUsername(data.login);
+          } else if (response.status === 401) {
+            // アクセストークンの期限切れなどで再認証が必要
+            // ここで再認証のプロセスを開始
+            console.log(
+              "GitHubアクセストークンが期限切れです。再認証して新しいトークンを取得してください。"
+            );
           } else {
             console.error("GitHubユーザー名の取得に失敗しました。");
           }
@@ -61,10 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
 
-    // Firebaseの認証ステータスの変更を監視
     const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
-
-    // コンポーネントがアンマウントされたときに監視を解除
     return () => unsubscribe();
   }, []);
 
